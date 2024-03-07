@@ -2,7 +2,8 @@
 $original_path = Get-Location
 
 # Check if there are changes in the main project
-if ((git diff --quiet) -ne 0)
+git diff --quiet
+if ($LASTEXITCODE -ne 0)
 {
     # Prompt for the main project commit message
     $main_commit_message = Read-Host -Prompt "Enter your main project commit message"
@@ -17,7 +18,8 @@ if ((git diff --quiet) -ne 0)
 Set-Location -Path boilerplates
 
 # Check if there are changes in the submodule
-if ((git diff --quiet) -ne 0)
+git diff --quiet
+if ($LASTEXITCODE -ne 0)
 {
     # Prompt for the submodule commit message
     $submodule_commit_message = Read-Host -Prompt "Enter your submodule commit message"
