@@ -27,7 +27,11 @@ $unstaged_changes = $LASTEXITCODE -ne 0
 git diff --cached --quiet
 $staged_changes = $LASTEXITCODE -ne 0
 
-if ($unstaged_changes -or $staged_changes)
+# Check for untracked files
+$untracked_files = git ls-files --others --exclude-standard
+$has_untracked_files = -not [string]::IsNullOrEmpty($untracked_files)
+
+if ($unstaged_changes -or $staged_changes -or $has_untracked_files)
 {
     # Prompt for the submodule commit message
     $submodule_commit_message = Read-Host -Prompt "Enter your submodule commit message"
