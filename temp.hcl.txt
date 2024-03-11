@@ -1,0 +1,62 @@
+# Ubuntu Server Focal Docker
+# ---
+# Packer Template to create an Ubuntu Server (Focal) with Docker on VirtualBox
+
+# Variable Definitions
+variable "iso_url" {
+    type = string
+    default = "http://releases.ubuntu.com/20.04/ubuntu-20.04.2-live-server-amd64.iso"
+}
+
+variable "iso_checksum" {
+    type = string
+    default = "sha256:abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234" # replace with actual checksum
+}
+
+source "virtualbox-iso" "ubuntu" {
+  iso_url             = "${var.iso_url}"
+  iso_checksum        = "${var.iso_checksum}"
+  guest_os_type       = "Ubuntu_64"
+  http_directory      = "http"
+  # PACKER Boot Commands
+  boot_command = [
+      "<esc><wait><esc><wait>",
+      "<f6><wait><esc><wait>",
+      "<bs><bs><bs><bs><bs>",
+      "autoinstall ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
+      "--- <enter>"
+  ]
+  boot = "c"
+  boot_wait = "5s"
+
+  # PACKER Autoinstall Settings
+  http_directory = "http" 
+  # (Optional) Bind IP Address and Port
+  # http_bind_address = "0.0.0.0"
+  # http_port_min = 8802
+  # http_port_max = 8802
+  ssh_username        = "ubuntu"
+  ssh_password        = "password"
+  ssh_port            = 22
+  ssh_wait_timeout    = "20m"
+  vm_name             = "ubuntu-vm"
+  shutdown_command    = "echo 'password' | sudo -S shutdown -P now"
+}
+
+# Build Definition to create the VM Template
+build {
+
+  name = "ubuntu-server-focal-docker"
+  sources = ["source.proxmox.ubuntu-server-focal-docker"]
+
+  # Provisioning the VM Template for Cloud-Init Integration in Proxmox #1
+  provisioner "shell" {
+    inline = [
+      "echo 'Updating and upgrading apt packages...'",
+      "sudo apt-get update",
+      "sudo apt-get upgrade -y",
+      "echo 'Installing necessary packages...'",
+      "sudo apt-get install -y build-essential"
+    ]
+  }
+}
