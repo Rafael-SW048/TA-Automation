@@ -1,4 +1,4 @@
 Tools:
 1. Proxmox -> VM Provisionong
 2. Packer -> Create new VM Image (ISO)
-3. Cloud-Init -> Apply new configuration to new VM
+3. CloudBase-Init -> Apply new configuration to new VM
