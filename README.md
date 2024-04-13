@@ -10,19 +10,9 @@ First, you need to install Proxmox on your bare metal server. You can follow the
 
 After installing Proxmox, you need to correct the Proxmox repositories. You can do this by creating a file and adding the commands from `PVE_RepoCorrection.sh` to it, or you can run the `PVE_RepoCorrection.sh` script directly if you have it.
 
-To run the script, use the following command:
-  
-```bash
-bash PVE_RepoCorrection.sh
-```
 > **Note:** The corrected Proxmox repositories provided in the `PVE_RepoCorrection.sh` script are not advised to be used in a production environment. They are intended for testing and development purposes only. Please use caution and consult the official Proxmox documentation for recommended repository configurations in production environments.
 
 ## Step 3: Run Initial Setup Script
 
 Finally, you need to run the `PVE_inital_setup.sh` script. This script will perform the initial setup of your Proxmox server.
 
-To run the script, use the following command:
-
-```bash
-bash PVE_inital_setup.sh
-```

@@ -49,6 +49,7 @@ if ($verbose) {
     $VerbosePreference = "Continue"
 }
 
+# Function to run a process
 Function Run-Process($executable, $arguments) {
     $process = New-Object -TypeName System.Diagnostics.Process
     $psi = $process.StartInfo
@@ -64,12 +65,14 @@ Function Run-Process($executable, $arguments) {
     return $exit_code
 }
 
+# Function to download a file
 Function Download-File($url, $path) {
     Write-Verbose -Message "downloading url '$url' to '$path'"
     $client = New-Object -TypeName System.Net.WebClient
     $client.DownloadFile($url, $path)
 }
 
+# Function to extract a zip file
 Function Extract-Zip($zip, $dest) {
     Write-Verbose -Message "extracting '$zip' to '$dest'"
     try {
