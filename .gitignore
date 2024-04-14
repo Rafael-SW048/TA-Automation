@@ -26,9 +26,8 @@ credentials.json
 # Ignore editor-specific files
 .vscode/
 *.sublime-project
-*.sublime-workspace
 
-# Ignore backup files
-*.bak
-*.backup
-*.old
+# Ignore generated files
+*.iso
+*.msi
+*.exe
