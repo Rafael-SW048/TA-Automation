@@ -9,22 +9,24 @@ script_dir=$(dirname "$0")
 
 # mkisofs is a utility that creates an ISO 9660 image from files on disk
 echo "[+] Build iso windows 11 with cloudbase init"
-mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o $script_dir/iso/autounattend_win11_cloudbase-init.iso iso/win11_cloudbase-init
+mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o $script_dir/iso/autounattend_win11_cloudbase-init.iso $script_dir/iso/win11_cloudbase-init
 sha_autounattend_win11_cloudbaseInit=$(sha256sum $script_dir/iso/autounattend_win11_cloudbase-init.iso|cut -d ' ' -f1)
 # Update the SHA-256 checksum in the packer variable file
 echo "[+] update win11_cloudbase-init.pkvars.hcl"
-sed -i "s/\"sha256:iso_autounattend_checksum\"/\"sha256:$sha_autounattend_win11_cloudbaseInit\"/g" $script_dir/win11_cloudbaseinit/win11_cloudbase-init.pkvars.hcl
+sed -i "s/\"sha256:iso_autounattend_checksum\"/\"sha256:$sha_autounattend_win11_cloudbaseInit\"/g" $script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl
 
 # Check if the Cloudbase Init MSI installer exists
-echo "[+] Check if CloudbaseInitSetup_Stable_x64.msi exist"
+echo "[+] Check if CloudbaseInitSetup_1_1_4_x64.msi exist"
 if [ ! -f $script_dir/iso/scripts/sysprep/CloudbaseInitSetup_Stable_x64.msi ]; then
   # If it doesn't exist, download it
   echo "[-] CloudbaseInitSetup_Stable_x64.msi not found"
   echo "[+] Downloading CloudbaseInitSetup_Stable_x64.msi"
-  wget -O $script_dir/iso/scripts/sysprep/CloudbaseInitSetup_Stable_x64.msi https://www.cloudbase.it/downloads/CloudbaseInitSetup_Stable_x64.msi
+  file_size=$(curl -sI https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi | grep -i Content-Length | awk '{print $2}')
+  curl -L https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi | pv -lep -s $file_size > $script_dir/scripts/sysprep/CloudbaseInitSetup_1_1_4_x64.msi && echo "[+] Downloading CloudbaseInitSetup_1_1_4_x64.msi done"
 else
-  echo "[+] CloudbaseInitSetup_Stable_x64.msi exist"
+  echo "[+] CloudbaseInitSetup_1_1_4_x64.msi exist"
 fi
+
 
 # Building an ISO for scripts
 echo "[+] Build iso for scripts"
@@ -40,11 +42,12 @@ if [ ! -f /var/lib/vz/template/iso/virtio-win-0.1.240.iso ] || [ ! -f /var/lib/v
   # If it doesn't exist, download it
   echo "[-] virtio-win.iso not found"
   echo "[+] Downloading virtio-win-0.1.248.iso"
-  wget -O /var/lib/vz/template/iso/virtio-win-0.1.248.iso https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win-0.1.248.iso
+  file_size=$(curl -sI https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win-0.1.248.iso | grep -i Content-Length | awk '{print $2}')
+  curl -L https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win-0.1.248.iso | pv -lep -s $file_size > /var/lib/vz/template/iso/virtio-win-0.1.248.iso && echo "[+] Downloading virtio-win-0.1.248.iso done"
   sha_virtio248=$(sha256sum /var/lib/vz/template/iso/virtio-win-0.1.248.iso|cut -d ' ' -f1)
   # Update the SHA-256 checksum in the packer variable file
   echo "[+] update win11_cloudbase-init.pkvars.hcl"
-  sed -i "s/\"sha256:D5B5739CF297F0538D263E30678D5A09BBA470A7C6BCBD8DFF74E44153F16549\"/\"sha256:$sha_virtio248\"/g" "$script_dir/win11_cloudbaseinit/win11_cloudbase-init.pkvars.hcl"
+  sed -i "s/\"sha256:D5B5739CF297F0538D263E30678D5A09BBA470A7C6BCBD8DFF74E44153F16549\"/\"sha256:$sha_virtio248\"/g" "$script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl"
 else
   echo "[+] virtio-win.iso exist"
 fi
