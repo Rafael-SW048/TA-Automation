@@ -16,6 +16,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
     username = "${var.proxmox_api_token_id}"
     token = "${var.proxmox_api_token_secret}"
     node = "${var.proxmox_node}"
+    pool = "${var.proxmox_pool}"
     # (Optional) Skip TLS Verification
     insecure_skip_tls_verify = "${var.proxmox_skip_tls_verify}"
 
@@ -47,12 +48,12 @@ source "proxmox-iso" "win11-cloudbase-init" {
         type = "sata"
         disk_size = "${var.vm_disk_size}"
         storage_pool = "${var.proxmox_vm_storage}"
-        format = "qcow2"
+        format = "raw"
     }
 
     additional_iso_files {
         device = "sata3"
-        iso_url = "${var.iso_autounattend}"
+        iso_file = "${var.iso_autounattend}"
         iso_checksum = "${var.iso_autounattend_checksum}"
         unmount = true
     }
@@ -66,7 +67,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
 
     additional_iso_files {
         device = "sata5"
-        iso_url = "${var.iso_scripts}"
+        iso_file = "${var.iso_scripts}"
         iso_checksum = "${var.iso_scripts_checksum}"
         unmount = true
     }

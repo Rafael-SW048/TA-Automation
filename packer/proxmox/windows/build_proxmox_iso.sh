@@ -17,7 +17,7 @@ echo "----------------------------------------"
 echo "[+] Build iso windows 11 with cloudbase init"
 # Check if the ISO file already exists
 echo "[+] Checking if autounattend ISO file already exists"
-if [ -f $script_dir/iso/autounattend_win11_cloudbase-init.iso ]; then
+if [ -f /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso ]; then
   echo "[-] Autounattend ISO file already exists"
   if [ -z "$replace_choice1" ]; then
     read -p "Do you want to replace the existing autounattend ISO with a new one? (y/n): " replace_choice1
@@ -26,13 +26,13 @@ if [ -f $script_dir/iso/autounattend_win11_cloudbase-init.iso ]; then
   if [ "$replace_choice1" == "y" ] || [ "$replace_choice1" == "yes" ]; then
     # Create a temporary ISO file
     echo "[+] Creating temporary autounattend ISO file"
-    mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o $script_dir/iso/temp.iso $script_dir/iso/win11_cloudbase-init
+    mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o /var/lib/vz/template/iso/temp.iso $script_dir/iso/win11_cloudbase-init
     # Calculate the checksum of the temporary ISO file
     echo "[+] Calculating checksum of the temporary autounattend ISO file"
-    sha_temp=$(sha256sum $script_dir/iso/temp.iso | cut -d ' ' -f1)
+    sha_temp=$(sha256sum /var/lib/vz/template/iso/temp.iso | cut -d ' ' -f1)
     # Replace the existing ISO with the new one
     echo "[+] Replacing the existing autounattend ISO with the new one"
-    mv $script_dir/iso/temp.iso $script_dir/iso/autounattend_win11_cloudbase-init.iso
+    mv /var/lib/vz/template/iso/temp.iso /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso
     echo "[+] Updating win11_cloudbase-init.pkvars.hcl"
     sed -i "/iso_autounattend_checksum =/s/\"sha256:.*\"/\"sha256:$sha_temp\"/g" $script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl
   else
@@ -40,8 +40,8 @@ if [ -f $script_dir/iso/autounattend_win11_cloudbase-init.iso ]; then
   fi
 else
   echo "[+] ISO file does not exist"
-  mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o $script_dir/iso/autounattend_win11_cloudbase-init.iso $script_dir/iso/win11_cloudbase-init
-  sha_autounattend_win11_cloudbaseInit=$(sha256sum $script_dir/iso/autounattend_win11_cloudbase-init.iso|cut -d ' ' -f1)
+  mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso $script_dir/iso/win11_cloudbase-init
+  sha_autounattend_win11_cloudbaseInit=$(sha256sum /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso|cut -d ' ' -f1)
   # Update the SHA-256 checksum in the packer variable file
   echo "[+] Updating win11_cloudbase-init.pkvars.hcl"
   sed -i "/iso_autounattend_checksum =/s/\"sha256:.*\"/\"sha256:$sha_autounattend_win11_cloudbaseInit\"/g" $script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl
@@ -66,7 +66,7 @@ echo "----------------------------------------"
 echo "[+] Build iso for scripts"
 # Check if the scripts_cloudbase-init.iso already exists
 echo "[+] Checking if scripts_cloudbase-init.iso already exists"
-if [ -f $script_dir/iso/scripts_cloudbase-init.iso ]; then
+if [ -f /var/lib/vz/template/iso/scripts_cloudbase-init.iso ]; then
   echo "[-] scripts_cloudbase-init.iso already exists"
   if [ -z "$replace_choice2" ]; then
     read -p "Do you want to replace the existing scripts ISO with a new one? (y/n): " replace_choice2
@@ -75,13 +75,13 @@ if [ -f $script_dir/iso/scripts_cloudbase-init.iso ]; then
   if [ "$replace_choice2" == "y" ] || [ "$replace_choice2" == "yes" ]; then
     # Create a temporary ISO file for comparison
     echo "[+] Creating temporary ISO file"
-    mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o $script_dir/iso/temp.iso $script_dir/scripts
+    mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o /var/lib/vz/template/iso/temp.iso $script_dir/scripts
     # Calculate the checksum of the temporary ISO file
     echo "[+] Calculating checksum of the temporary ISO file"
-    sha_temp=$(sha256sum $script_dir/iso/temp.iso | cut -d ' ' -f1)
+    sha_temp=$(sha256sum /var/lib/vz/template/iso/temp.iso | cut -d ' ' -f1)
     # Replace the existing ISO with the new one
     echo "[+] Replacing the existing scripts ISO with the new one"
-    mv $script_dir/iso/temp.iso $script_dir/iso/scripts_cloudbase-init.iso
+    mv /var/lib/vz/template/iso/temp.iso /var/lib/vz/template/iso/scripts_cloudbase-init.iso
     echo "[+] Updating scripts.pkvars.hcl"
     sed -i "/iso_scripts_checksum =/s/\"sha256:.*\"/\"sha256:$sha_temp\"/g" $script_dir/scripts.pkvars.hcl
   else
@@ -89,8 +89,8 @@ if [ -f $script_dir/iso/scripts_cloudbase-init.iso ]; then
   fi
 else
   echo "[+] scripts_cloudbase-init.iso does not exist"
-  mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o $script_dir/iso/scripts_cloudbase-init.iso $script_dir/scripts
-  sha_scripts_cloudbaseInit=$(sha256sum $script_dir/iso/scripts_cloudbase-init.iso|cut -d ' ' -f1)
+  mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o /var/lib/vz/template/iso/scripts_cloudbase-init.iso $script_dir/scripts
+  sha_scripts_cloudbaseInit=$(sha256sum /var/lib/vz/template/iso/scripts_cloudbase-init.iso|cut -d ' ' -f1)
   # Update the SHA-256 checksum in the packer variable file
   echo "[+] Updating scripts.pkvars.hcl"
   sed -i "/iso_scripts_checksum =/s/\"sha256:.*\"/\"sha256:$sha_scripts_cloudbaseInit\"/g" $script_dir/scripts.pkvars.hcl
