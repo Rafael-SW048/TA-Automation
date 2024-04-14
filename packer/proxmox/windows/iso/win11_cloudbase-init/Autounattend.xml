@@ -1,5 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+	<servicing/>
 	<!--https://schneegans.de/windows/unattend-generator/?LanguageMode=Unattended&UILanguage=en-US&UserLocale=id-ID&KeyboardLayout=0409%3A00000409&ProcessorArchitecture=amd64&ComputerNameMode=Random&TimeZoneMode=Implicit&PartitionMode=Unattended&PartitionLayout=GPT&EspSize=512&RecoveryMode=None&WindowsEditionMode=Unattended&WindowsEdition=pro&UserAccountMode=Unattended&AccountName0=admin&AccountPassword0=admin&AccountGroup0=Administrators&AccountName1=&AccountName2=&AccountName3=&AccountName4=&AutoLogonMode=Own&PasswordExpirationMode=Unlimited&LockoutMode=Disabled&DisableDefender=true&DisableSystemRestore=true&EnableLongPaths=true&EnableRemoteDesktop=true&AllowPowerShellScripts=true&NoAutoRebootWithLoggedOnUsers=true&DisableAppSuggestions=true&DisableWidgets=true&ProcessAudit=true&ProcessAuditCommandLine=true&WifiMode=Skip&ExpressSettings=DisableAll&Remove3DViewer=true&RemoveCamera=true&RemoveClipchamp=true&RemoveCortana=true&RemoveDevHome=true&RemoveFamily=true&RemoveFeedbackHub=true&RemoveGetHelp=true&RemoveMaps=true&RemoveMathInputPanel=true&RemoveZuneVideo=true&RemoveNews=true&RemoveNotepadClassic=true&RemoveOffice365=true&RemoveOneDrive=true&RemoveOneNote=true&RemoveOutlook=true&RemovePaint=true&RemovePaint3D=true&RemovePeople=true&RemoveQuickAssist=true&RemoveSkype=true&RemoveSolitaire=true&RemoveStepsRecorder=true&RemoveStickyNotes=true&RemoveTeams=true&RemoveGetStarted=true&RemoveToDo=true&RemoveVoiceRecorder=true&RemoveWeather=true&RemoveWindowsMediaPlayer=true&RemoveXboxApps=true&RemoveYourPhone=true&SystemScript0=&SystemScriptType0=Cmd&SystemScript1=&SystemScriptType1=Ps1&SystemScript2=&SystemScriptType2=Reg&SystemScript3=&SystemScriptType3=Vbs&DefaultUserScript0=&DefaultUserScriptType0=Reg&FirstLogonScript0=&FirstLogonScriptType0=Cmd&FirstLogonScript1=&FirstLogonScriptType1=Ps1&FirstLogonScript2=&FirstLogonScriptType2=Reg&FirstLogonScript3=&FirstLogonScriptType3=Vbs&UserOnceScript0=&UserOnceScriptType0=Cmd&UserOnceScript1=&UserOnceScriptType1=Ps1&UserOnceScript2=&UserOnceScriptType2=Reg&UserOnceScript3=&UserOnceScriptType3=Vbs&WdacMode=Skip-->
 	<settings pass="offlineServicing">
 		<component name="Microsoft-Windows-LUA-Settings" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -16,20 +17,48 @@
 			<UILanguage>en-US</UILanguage>
 			<UserLocale>id-ID</UserLocale>
 		</component>
-		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" 
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" 
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+			<!-- Choose between DiskConfiguration or RunSynchronous -->
+			<DiskConfiguration>
+				<Disk wcm:action="add">
+					<CreatePartitions>
+						<CreatePartition wcm:action="add">
+							<Order>1</Order>
+							<Type>Primary</Type>
+							<Extend>true</Extend>
+						</CreatePartition>
+					</CreatePartitions>
+					<ModifyPartitions>
+						<ModifyPartition wcm:action="add">
+							<Extend>false</Extend>
+							<Format>NTFS</Format>
+							<Letter>C</Letter>
+							<Order>1</Order>
+							<PartitionID>1</PartitionID>
+							<Label>Windows 11</Label>
+						</ModifyPartition>
+					</ModifyPartitions>
+					<DiskID>0</DiskID>
+					<WillWipeDisk>true</WillWipeDisk>
+				</Disk>
+				<WillShowUI>OnError</WillShowUI>
+			</DiskConfiguration>
 			<ImageInstall>
 				<OSImage>
 					<InstallTo>
 						<DiskID>0</DiskID>
-						<PartitionID>3</PartitionID>
-						<WillShowUI>OnError</WillShowUI>
-						<InstallFrom>
-							<MetaData wcm:action="add">
-								<Key>/IMAGE/NAME</Key>
-								<Value>Windows 11 Pro Evaluation</Value>
-							</MetaData>
-						</InstallFrom>
+						<!-- PartitionID 1 for DiskConfiguration and 3 for RunSyncronous -->
+						<PartitionID>1</PartitionID>
 					</InstallTo>
+					<WillShowUI>OnError</WillShowUI>
+					<InstallFrom>
+						<MetaData wcm:action="add">
+							<Key>/IMAGE/NAME</Key>
+							<Value>Windows 11 Pro Evaluation</Value>
+						</MetaData>
+					</InstallFrom>
 				</OSImage>
 			</ImageInstall>
 			<UserData>
@@ -41,7 +70,7 @@
 				<FullName>admin</FullName>
 				<Organization>admin</Organization>
 			</UserData>
-			<RunSynchronous>
+			<!-- <RunSynchronous>
 				<RunSynchronousCommand wcm:action="add">
 					<Order>1</Order>
 					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo SELECT DISK=0"</Path>
@@ -86,59 +115,62 @@
 					<Order>11</Order>
 					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.log" diskpart.exe /s "X:\diskpart.txt""</Path>
 				</RunSynchronousCommand>
-			</RunSynchronous>
+			</RunSynchronous> -->
 		</component>
-		<component name="Microsoft-Windows-PnpCustomizationsWinPE" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" processorArchitecture="amd64" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+		<component name="Microsoft-Windows-PnpCustomizationsWinPE" 
+			publicKeyToken="31bf3856ad364e35" language="neutral" 
+			versionScope="nonSxS" processorArchitecture="amd64" 
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
 		<!--
 				This makes the VirtIO drivers available to Windows, assuming that
 				the VirtIO driver disk at https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso
 				(see https://docs.fedoraproject.org/en-US/quick-docs/creating-windows-virtual-machines-using-virtio-drivers/index.html#virtio-win-direct-downloads)
 				is available as drive F:
 		-->
-		<DriverPaths>
-			<PathAndCredentials wcm:action="add" wcm:keyValue="2">
-				<Path>F:\viostor\w11\amd64</Path>
-			</PathAndCredentials>
+			<DriverPaths>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="2">
+					<Path>F:\viostor\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="3">
-				<Path>F:\NetKVM\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="3">
+					<Path>F:\NetKVM\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="4">
-				<Path>F:\Balloon\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="4">
+					<Path>F:\Balloon\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="5">
-				<Path>F:\pvpanic\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="5">
+					<Path>F:\pvpanic\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="6">
-				<Path>F:\qemupciserial\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="6">
+					<Path>F:\qemupciserial\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="7">
-				<Path>F:\qxldod\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="7">
+					<Path>F:\qxldod\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="8">
-				<Path>F:\vioinput\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="8">
+					<Path>F:\vioinput\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="9">
-				<Path>F:\viorng\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="9">
+					<Path>F:\viorng\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="10">
-				<Path>F:\vioscsi\w11\amd64</Path>
-			</PathAndCredentials>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="10">
+					<Path>F:\vioscsi\w11\amd64</Path>
+				</PathAndCredentials>
 
-			<PathAndCredentials wcm:action="add" wcm:keyValue="11">
-				<Path>F:\vioserial\w11\amd64</Path>
-			</PathAndCredentials>
-		</DriverPaths>
-</component>
+				<PathAndCredentials wcm:action="add" wcm:keyValue="11">
+					<Path>F:\vioserial\w11\amd64</Path>
+				</PathAndCredentials>
+			</DriverPaths>
+		</component>
 	</settings>
-	<settings pass="generalize"></settings>
+	<!-- <settings pass="generalize"></settings> -->
 	<settings pass="specialize">
 		<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
 			<RunSynchronous>
@@ -562,6 +594,58 @@
 					<Order>105</Order>
 					<Path>reg.exe add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>106</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo mkdir -Path "C:\Windows\Setup\Scripts" -ErrorAction 'SilentlyContinue';"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>107</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo $doc = [xml]::new(); $doc.Load( "C:\Windows\Panther\unattend.xml" );"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>108</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo foreach( $file in $doc.unattend.Extensions.File ) {"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>109</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo $path = $file.GetAttribute( 'path' );"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>110</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo $encoding = switch( [System.IO.Path]::GetExtension( $path ) ) {"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>111</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo '.ps1' { [System.Text.Encoding]::UTF8; }"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>112</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo '.cmd' { [System.Text.Encoding]::Default; }"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>113</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo { $_ -in '.reg', '.vbs', '.js' } { [System.Text.UnicodeEncoding]::new( $false, $true ); }"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>114</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo };"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>115</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo [System.IO.File]::WriteAllBytes( $path, ( $encoding.GetPreamble() + $encoding.GetBytes( $file.InnerText ) ) );"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>116</Order>
+					<Path>cmd.exe /c ">>"C:\Windows\Temp\ExtractScripts.ps1" echo }"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>117</Order>
+					<Path>powershell.exe -NoProfile -Command "Get-Content -LiteralPath 'C:\Windows\Temp\ExtractScripts.ps1' -Raw | Invoke-Expression;"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>118</Order>
+					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\Runonce" /v "unattend-01" /t REG_SZ /d "powershell.exe -NoProfile -Command \"Get-Content -LiteralPath 'C:\Windows\Setup\Scripts\unattend-01.ps1' -Raw | Invoke-Expression;\"" /f</Path>
+				</RunSynchronousCommand>
 			</RunSynchronous>
 		</component>
 		<component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
@@ -577,8 +661,8 @@
 			<SkipAutoActivation>true</SkipAutoActivation>
 		</component>
 	</settings>
-	<settings pass="auditSystem"></settings>
-	<settings pass="auditUser"></settings>
+	<!-- <settings pass="auditSystem"></settings> -->
+	<!-- <settings pass="auditUser"></settings> -->
 	<settings pass="oobeSystem">
 		<component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
 			<InputLocale>0409:00000409</InputLocale>
@@ -756,4 +840,8 @@
 			<ShowWindowsLive>false</ShowWindowsLive>
 		</component>
 	</settings>
+	<!-- Testing -->
+	<Extensions xmlns="https://schneegans.de/windows/unattend-generator/">
+		<File path="C:\Windows\Setup\Scripts\unattend-01.ps1"># install Cloudbase-Init echo "Create setup directory" mkdir "c:\setup" echo "Copy CloudbaseInitSetup_1_1_4_x64.msi" copy-item "G:\sysprep\CloudbaseInitSetup_1_1_4_x64.msi" "c:\setup\CloudbaseInitSetup_1_1_4_x64.msi" -force echo "Start process CloudbaseInitSetup_1_1_4_x64.msi" # Define the file path $msiPath = "C:\setup\CloudbaseInitSetup_1_1_4_x64.msi" $logPath = "C:\setup\cloud-init.log" # Launch the installer and capture logs $exitCode = Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i `"$msiPath`" /qn /l*v `"$logPath`"" -Wait -PassThru # Check installation status if ($exitCode.ExitCode -eq 0) { Write-Host "Installation successful! Log saved to $logPath" } else { Write-Host "Installation failed with exit code: $($exitCode.ExitCode)" } Start-Sleep 30 while (!(Select-String -Path 'C:\setup\cloud-init.log' -Pattern 'Installation completed successfully' -Quiet)) { echo "Wait cloud-init installation end..." Start-Sleep 5 } # Check if cloudbase-init service is running, if not, start the service echo "Show cloudinit service" Get-Service -Name cloudbase-init if ((Get-Service -Name cloudbase-init).Status -ne 'Running') { echo "Starting cloudbase-init service" Start-Service -Name cloudbase-init } echo "Move config files to location" # Move conf files to Cloudbase directory copy-item "G:\sysprep\cloudbase-init.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf" -force copy-item "G:\sysprep\cloudbase-init-unattend.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf" -force copy-item "G:\sysprep\cloudbase-init-unattend.xml" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.xml" -force echo "Disable cloudbaseinit at start" # disable cloudbase-init start Set-Service -Name cloudbase-init -StartupType Disabled # Run sysprep cd "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\" start-process -FilePath "C:/Windows/system32/sysprep/sysprep.exe" -ArgumentList "/generalize /oobe /mode:vm /unattend:cloudbase-init-unattend.xml" -wait</File>
+	</Extensions>
 </unattend>

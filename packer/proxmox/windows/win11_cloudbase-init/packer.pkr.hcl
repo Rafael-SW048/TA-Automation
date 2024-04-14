@@ -35,11 +35,12 @@ source "proxmox-iso" "win11-cloudbase-init" {
     cores = "${var.vm_cpu_cores}"
     sockets = "${var.vm_sockets}"
     os = "${var.os}"
+    // bios = "ovmf"
 
     network_adapters {
             model = "e1000"
             bridge = "vmbr0"
-            vlan_tag = "102"
+            // vlan_tag = "102"
             firewall = "false"
     }
 
@@ -72,6 +73,10 @@ source "proxmox-iso" "win11-cloudbase-init" {
         unmount = true
     }
 
+    boot_command = [
+        "<wait30><tab><wait><enter>"
+    ]
+
     cloud_init = true
     cloud_init_storage_pool = "${var.proxmox_iso_storage}"
     communicator = "winrm"
@@ -88,16 +93,16 @@ build {
     name = "win11-cloudbase-init"
     sources = ["source.proxmox-iso.win11-cloudbase-init"]
 
-    provisioner "powershell" {
-        elevated_password = "admin"
-        elevated_user     = "admin"
-        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
-    }
+    // provisioner "powershell" {
+    //     elevated_user     = "admin"
+    //     elevated_password = "admin"
+    //     scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
+    // }
 
-    provisioner "powershell" {
-        elevated_password = "admin"
-        elevated_user     = "admin"
-        pause_before      = "2m30s"
-        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
-    }
+    // provisioner "powershell" {
+    //     elevated_user     = "admin"
+    //     elevated_password = "admin"
+    //     pause_before      = "30s"
+    //     scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
+    // }
 }
