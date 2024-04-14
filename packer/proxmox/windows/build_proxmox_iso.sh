@@ -19,10 +19,15 @@ sed -i "s/\"sha256:iso_autounattend_checksum\"/\"sha256:$sha_autounattend_win11_
 echo "[+] Check if CloudbaseInitSetup_1_1_4_x64.msi exist"
 if [ ! -f $script_dir/iso/scripts/sysprep/CloudbaseInitSetup_Stable_x64.msi ]; then
   # If it doesn't exist, download it
-  echo "[-] CloudbaseInitSetup_Stable_x64.msi not found"
-  echo "[+] Downloading CloudbaseInitSetup_Stable_x64.msi"
+  echo "[-] CloudbaseInitSetup_1_1_4_x64.msi not found"
+  echo "[+] Downloading CloudbaseInitSetup_1_1_4_x64.msi"
   file_size=$(curl -sI https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi | grep -i Content-Length | awk '{print $2}')
-  curl -L https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi | pv -lep -s $file_size > $script_dir/scripts/sysprep/CloudbaseInitSetup_1_1_4_x64.msi && echo "[+] Downloading CloudbaseInitSetup_1_1_4_x64.msi done"
+  if [ -z "$file_size" ]; then
+    curl -L https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi > $script_dir/scripts/sysprep/CloudbaseInitSetup_1_1_4_x64.msi && echo "[+] Downloading CloudbaseInitSetup_1_1_4_x64.msi done"
+  else
+    curl -L https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi | pv -lep -s $file_size > $script_dir/scripts/sysprep/CloudbaseInitSetup_1_1_4_x64.msi && echo "[+] Downloading CloudbaseInitSetup_1_1_4_x64.msi done"
+  fi
+    curl -L https://www.cloudbase.it/downloads/CloudbaseInitSetup_1_1_4_x64.msi | pv -lep -s $file_size > $script_dir/scripts/sysprep/CloudbaseInitSetup_1_1_4_x64.msi && echo "[+] Downloading CloudbaseInitSetup_1_1_4_x64.msi done"
 else
   echo "[+] CloudbaseInitSetup_1_1_4_x64.msi exist"
 fi
