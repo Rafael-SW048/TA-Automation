@@ -99,10 +99,10 @@ build {
     //     scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
     // }
 
-    // provisioner "powershell" {
-    //     elevated_user     = "admin"
-    //     elevated_password = "admin"
-    //     pause_before      = "30s"
-    //     scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
-    // }
+    provisioner "powershell" {
+        elevated_user     = "admin"
+        elevated_password = "admin"
+        pause_before      = "120s"
+        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
+    }
 }

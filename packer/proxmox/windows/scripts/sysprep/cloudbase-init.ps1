@@ -21,7 +21,9 @@ if ($exitCode.ExitCode -eq 0) {
   Write-Host "Installation failed with exit code: $($exitCode.ExitCode)"
 }
 
-Start-Sleep 30
+Start-Sleep 120
+
+# Cloudbase-init Part 2
 
 while (!(Select-String -Path 'C:\setup\cloud-init.log' -Pattern 'Installation completed successfully' -Quiet)) {
   echo "Wait cloud-init installation end..."
@@ -50,3 +52,4 @@ Set-Service -Name cloudbase-init -StartupType Disabled
 # Run sysprep
 cd "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\"
 start-process -FilePath "C:/Windows/system32/sysprep/sysprep.exe" -ArgumentList "/generalize /oobe /mode:vm /unattend:cloudbase-init-unattend.xml" -wait
+

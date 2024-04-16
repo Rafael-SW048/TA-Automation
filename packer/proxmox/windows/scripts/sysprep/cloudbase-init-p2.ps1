@@ -1,3 +1,5 @@
+Start-Sleep 120
+
 while (!(Select-String -Path 'C:\setup\cloud-init.log' -Pattern 'Installation completed successfully' -Quiet)) {
   echo "Wait cloud-init installation end..."
   Start-Sleep 5
