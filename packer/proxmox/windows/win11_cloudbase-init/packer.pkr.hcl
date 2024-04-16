@@ -93,16 +93,16 @@ build {
     name = "win11-cloudbase-init"
     sources = ["source.proxmox-iso.win11-cloudbase-init"]
 
-    // provisioner "powershell" {
-    //     elevated_user     = "admin"
-    //     elevated_password = "admin"
-    //     scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
-    // }
+    provisioner "powershell" {
+        elevated_user     = "${var.winrm_username}"
+        elevated_password = "${var.winrm_password}"
+        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
+    }
 
     provisioner "powershell" {
-        elevated_user     = "admin"
-        elevated_password = "admin"
-        pause_before      = "120s"
+        elevated_user     = "${var.winrm_username}"
+        elevated_password = "${var.winrm_password}"
+        pause_before      = "30s"
         scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
     }
 }
