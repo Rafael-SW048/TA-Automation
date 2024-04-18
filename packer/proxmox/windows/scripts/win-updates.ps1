@@ -1,3 +1,5 @@
+Write-Output "Install Windows Updates"
+
 [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
 param($global:RestartRequired = 0,
   $global:MoreUpdates = 0,

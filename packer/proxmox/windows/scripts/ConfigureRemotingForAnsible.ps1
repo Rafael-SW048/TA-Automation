@@ -216,6 +216,8 @@ Function Enable-GlobalHttpFirewallAccess
     Write-Verbose "HTTP firewall rule $($rule.Name) updated"
 }
 
+Write-Output "Configuring WinRM for Ansible"
+
 # Setup error handling.
 Trap
 {

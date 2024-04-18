@@ -176,422 +176,170 @@
 			<RunSynchronous>
 				<RunSynchronousCommand wcm:action="add">
 					<Order>1</Order>
-					<Path>ReAgentc.exe /disable</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>2</Order>
-					<Path>cmd.exe /c "del /a /f "C:\Windows\System32\Recovery\Winre.wim""</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>3</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.Microsoft3DViewer"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>4</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.WindowsCamera"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>5</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Clipchamp.Clipchamp"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>6</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.549981C3F5F10"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>7</Order>
-					<Path>reg.exe delete "HKLM\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\DevHomeUpdate" /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>8</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo MicrosoftCorporationII.MicrosoftFamily"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>9</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.WindowsFeedbackHub"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>10</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.GetHelp"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>11</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.WindowsMaps"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>12</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-caps.txt" echo MathRecognizer"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>13</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.ZuneVideo"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>14</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.BingNews"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>15</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-caps.txt" echo Microsoft.Windows.Notepad"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>16</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.MicrosoftOfficeHub"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>17</Order>
-					<Path>cmd.exe /c "del "C:\Users\Default\AppData\Roaming\Microsoft\Windows\Start Menu\Programs\OneDrive.lnk""</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>18</Order>
-					<Path>cmd.exe /c "del "C:\Windows\System32\OneDriveSetup.exe""</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>19</Order>
-					<Path>cmd.exe /c "del "C:\Windows\SysWOW64\OneDriveSetup.exe""</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>20</Order>
-					<Path>reg.exe load "HKU\mount" "C:\Users\Default\NTUSER.DAT"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>21</Order>
-					<Path>reg.exe delete "HKU\mount\Software\Microsoft\Windows\CurrentVersion\Run" /v OneDriveSetup /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>22</Order>
-					<Path>reg.exe unload "HKU\mount"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>23</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.Office.OneNote"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>24</Order>
-					<Path>reg.exe delete "HKLM\SOFTWARE\Microsoft\WindowsUpdate\Orchestrator\UScheduler_Oobe\OutlookUpdate" /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>25</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-caps.txt" echo Microsoft.Windows.MSPaint"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>26</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.Paint"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>27</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.MSPaint"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>28</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.People"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>29</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-caps.txt" echo App.Support.QuickAssist"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>30</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo MicrosoftCorporationII.QuickAssist"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>31</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.SkypeApp"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>32</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.MicrosoftSolitaireCollection"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>33</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-caps.txt" echo App.StepsRecorder"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>34</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.MicrosoftStickyNotes"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>35</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Communications" /v ConfigureChatAutoInstall /t REG_DWORD /d 0 /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>36</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.Getstarted"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>37</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.Todos"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>38</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.WindowsSoundRecorder"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>39</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.BingWeather"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>40</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-caps.txt" echo Media.WindowsMediaPlayer"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>41</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.Xbox.TCUI"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>42</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.XboxApp"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>43</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.XboxGameOverlay"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>44</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.XboxGamingOverlay"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>45</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.XboxIdentityProvider"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>46</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.XboxSpeechToTextOverlay"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>47</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.GamingApp"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>48</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\remove-packages.txt" echo Microsoft.YourPhone"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>49</Order>
-					<Path>powershell.exe -NoProfile -Command "Get-AppxProvisionedPackage -Online | where DisplayName -In (Get-Content $env:TEMP\remove-packages.txt ) | Remove-AppxProvisionedPackage -AllUsers -Online *&gt;&amp;1 &gt;&gt; $env:TEMP\remove-packages.log;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>50</Order>
-					<Path>powershell.exe -NoProfile -Command "Get-WindowsCapability -Online | where {($_.Name -split '~')[0] -in (Get-Content $env:TEMP\remove-caps.txt ) } | Remove-WindowsCapability -Online *&gt;&amp;1 &gt;&gt; $env:TEMP\remove-caps.log;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>51</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;LayoutModificationTemplate Version="1" xmlns="http://schemas.microsoft.com/Start/2014/LayoutModification"^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>52</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;LayoutOptions StartTileGroupCellWidth="6" /^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>53</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;DefaultLayoutOverride^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>54</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;StartLayoutCollection^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>55</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;StartLayout GroupCellWidth="6" xmlns="http://schemas.microsoft.com/Start/2014/FullDefaultLayout" /^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>56</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;/StartLayoutCollection^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>57</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;/DefaultLayoutOverride^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>58</Order>
-					<Path>cmd.exe /c "&gt;&gt;"C:\Users\Default\AppData\Local\Microsoft\Windows\Shell\LayoutModification.xml" echo ^&lt;/LayoutModificationTemplate^&gt;"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>59</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start" /v ConfigureStartPins /t REG_SZ /d "{ \"pinnedList\": [] }" /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>60</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start" /v ConfigureStartPins_ProviderSet /t REG_DWORD /d 1 /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>61</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\current\device\Start" /v ConfigureStartPins_WinningProvider /t REG_SZ /d B5292708-1619-419B-9923-E5D9F3925E71 /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>62</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\providers\B5292708-1619-419B-9923-E5D9F3925E71\default\Device\Start" /v ConfigureStartPins /t REG_SZ /d "{ \"pinnedList\": [] }" /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>63</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\PolicyManager\providers\B5292708-1619-419B-9923-E5D9F3925E71\default\Device\Start" /v ConfigureStartPins_LastWrite /t REG_DWORD /d 1 /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>64</Order>
 					<Path>net.exe accounts /lockoutthreshold:0</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>65</Order>
+					<Order>2</Order>
 					<Path>net.exe accounts /maxpwage:UNLIMITED</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>66</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Sense"</Path>
+					<Order>3</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\Sense"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>67</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo     "Start" = REG_DWORD 4"</Path>
+					<Order>4</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo "Start" = REG_DWORD 4"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>68</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdBoot"</Path>
+					<Order>5</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdBoot"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>69</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo     "Start" = REG_DWORD 4"</Path>
+					<Order>6</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo "Start" = REG_DWORD 4"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>70</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdFilter"</Path>
+					<Order>7</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdFilter"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>71</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo     "Start" = REG_DWORD 4"</Path>
+					<Order>8</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo "Start" = REG_DWORD 4"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>72</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdNisDrv"</Path>
+					<Order>9</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdNisDrv"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>73</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo     "Start" = REG_DWORD 4"</Path>
+					<Order>10</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo "Start" = REG_DWORD 4"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>74</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdNisSvc"</Path>
+					<Order>11</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WdNisSvc"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>75</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo     "Start" = REG_DWORD 4"</Path>
+					<Order>12</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo "Start" = REG_DWORD 4"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>76</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend"</Path>
+					<Order>13</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\WinDefend"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>77</Order>
-					<Path>cmd.exe /c "&gt;&gt;"%TEMP%\regini.txt" echo     "Start" = REG_DWORD 4"</Path>
+					<Order>14</Order>
+					<Path>cmd.exe /c ">>"%TEMP%\regini.txt" echo "Start" = REG_DWORD 4"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>78</Order>
+					<Order>15</Order>
 					<Path>regini.exe "%TEMP%\regini.txt"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>79</Order>
+					<Order>16</Order>
 					<Path>reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\FileSystem" /v LongPathsEnabled /t REG_DWORD /d 1 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>80</Order>
+					<Order>17</Order>
 					<Path>netsh.exe advfirewall firewall set rule group="Remote Desktop" new enable=Yes</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>81</Order>
+					<Order>18</Order>
 					<Path>reg.exe add "HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server" /v fDenyTSConnections /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>82</Order>
+					<Order>19</Order>
 					<Path>auditpol.exe /set /subcategory:"Process Creation" /success:enable /failure:enable</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>83</Order>
-					<Path>reg.exe add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit" /v ProcessCreationIncludeCmdLine_Enabled /t REG_DWORD /d 1 /f</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>84</Order>
+					<Order>20</Order>
 					<Path>powershell.exe -NoProfile -Command "Set-ExecutionPolicy -Scope 'LocalMachine' -ExecutionPolicy 'RemoteSigned' -Force;"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>85</Order>
+					<Order>21</Order>
+					<Path>fsutil.exe behavior set disableLastAccess 1</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>22</Order>
 					<Path>reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v AUOptions /t REG_DWORD /d 4 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>86</Order>
+					<Order>23</Order>
 					<Path>reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Windows\WindowsUpdate\AU" /v NoAutoRebootWithLoggedOnUsers /t REG_DWORD /d 1 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>87</Order>
+					<Order>24</Order>
 					<Path>reg.exe add "HKLM\SOFTWARE\Policies\Microsoft\Dsh" /v AllowNewsAndInterests /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>88</Order>
+					<Order>25</Order>
 					<Path>reg.exe load "HKU\mount" "C:\Users\Default\NTUSER.DAT"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>89</Order>
+					<Order>26</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "ContentDeliveryAllowed" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>90</Order>
+					<Order>27</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "FeatureManagementEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>91</Order>
+					<Order>28</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "OEMPreInstalledAppsEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>92</Order>
+					<Order>29</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>93</Order>
+					<Order>30</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEverEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>94</Order>
+					<Order>31</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SilentInstalledAppsEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>95</Order>
+					<Order>32</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SoftLandingEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>96</Order>
+					<Order>33</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContentEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>97</Order>
+					<Order>34</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-310093Enabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>98</Order>
+					<Order>35</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338387Enabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>99</Order>
+					<Order>36</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338388Enabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>100</Order>
+					<Order>37</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>101</Order>
+					<Order>38</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338393Enabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>102</Order>
+					<Order>39</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353698Enabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>103</Order>
+					<Order>40</Order>
 					<Path>reg.exe add "HKU\mount\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>104</Order>
+					<Order>41</Order>
 					<Path>reg.exe unload "HKU\mount"</Path>
 				</RunSynchronousCommand>
 				<RunSynchronousCommand wcm:action="add">
-					<Order>105</Order>
+					<Order>42</Order>
 					<Path>reg.exe add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /t REG_DWORD /d 0 /f</Path>
 				</RunSynchronousCommand>
 				<!-- For Code Generator -->
@@ -812,7 +560,7 @@
 					<Description>Install-WMF3Hotfix.ps1</Description>
 					<Order>99</Order>
 				</SynchronousCommand>
-				<!-- no updates -->
+				<!-- WITHOUT WINDOWS UPDATES -->
 				<SynchronousCommand wcm:action="add">
 					<CommandLine>powershell -NoProfile -ExecutionPolicy Bypass -Command "G:\ConfigureRemotingForAnsible.ps1"</CommandLine>
 					<Description>ConfigureRemotingForAnsible</Description>
@@ -823,8 +571,8 @@
 					<Description>Enable WinRM</Description>
 					<Order>101</Order>
 				</SynchronousCommand>
-				<!-- WITH WINDOWS UPDATES 
-				<SynchronousCommand wcm:action="add">
+				<!-- WITH WINDOWS UPDATES  -->
+				<!-- <SynchronousCommand wcm:action="add">
 					<CommandLine>cmd.exe /c G:\microsoft-updates.bat</CommandLine>
 					<Order>99</Order>
 					<Description>Enable Microsoft Updates</Description>
@@ -840,23 +588,10 @@
 					<Description>Install Windows Updates</Description>
 					<Order>101</Order>
 					<RequiresUserInput>true</RequiresUserInput>
-				</SynchronousCommand>
-					END WITH WINDOWS UPDATES -->
+				</SynchronousCommand> -->
+					<!-- END WITH WINDOWS UPDATES -->
 			</FirstLogonCommands>
 			<ShowWindowsLive>false</ShowWindowsLive>
 		</component>
 	</settings>
-	<!-- Testing -->
-	<!-- Full -->
-	<!-- <Extensions xmlns="https://schneegans.de/windows/unattend-generator/">
-		<File path="C:\Windows\Setup\Scripts\unattend-01.ps1"># install Cloudbase-Init echo "Create setup directory" mkdir "c:\setup" echo "Copy CloudbaseInitSetup_1_1_4_x64.msi" copy-item "G:\sysprep\CloudbaseInitSetup_1_1_4_x64.msi" "c:\setup\CloudbaseInitSetup_1_1_4_x64.msi" -force echo "Start process CloudbaseInitSetup_1_1_4_x64.msi" # Define the file path $msiPath = "C:\setup\CloudbaseInitSetup_1_1_4_x64.msi" $logPath = "C:\setup\cloud-init.log" # Launch the installer and capture logs $exitCode = Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i `"$msiPath`" /qn /l*v `"$logPath`"" -Wait -PassThru # Check installation status if ($exitCode.ExitCode -eq 0) { Write-Host "Installation successful! Log saved to $logPath" } else { Write-Host "Installation failed with exit code: $($exitCode.ExitCode)" } Start-Sleep 30 while (!(Select-String -Path 'C:\setup\cloud-init.log' -Pattern 'Installation completed successfully' -Quiet)) { echo "Wait cloud-init installation end..." Start-Sleep 5 } # Check if cloudbase-init service is running, if not, start the service echo "Show cloudinit service" Get-Service -Name cloudbase-init if ((Get-Service -Name cloudbase-init).Status -ne 'Running') { echo "Starting cloudbase-init service" Start-Service -Name cloudbase-init } echo "Move config files to location" # Move conf files to Cloudbase directory copy-item "G:\sysprep\cloudbase-init.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf" -force copy-item "G:\sysprep\cloudbase-init-unattend.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf" -force copy-item "G:\sysprep\cloudbase-init-unattend.xml" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.xml" -force echo "Disable cloudbaseinit at start" # disable cloudbase-init start Set-Service -Name cloudbase-init -StartupType Disabled # Run sysprep cd "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\" start-process -FilePath "C:/Windows/system32/sysprep/sysprep.exe" -ArgumentList "/generalize /oobe /mode:vm /unattend:cloudbase-init-unattend.xml" -wait</File>
-	</Extensions> -->
-	<!-- PART 1 -->
-	<!-- <Extensions xmlns="https://schneegans.de/windows/unattend-generator/">
-		<File path="C:\Windows\Setup\Scripts\unattend-01.ps1">echo "Create setup directory" mkdir "c:\setup" echo "Copy CloudbaseInitSetup_1_1_4_x64.msi" copy-item "G:\sysprep\CloudbaseInitSetup_1_1_4_x64.msi" "c:\setup\CloudbaseInitSetup_1_1_4_x64.msi" -force echo "Start process CloudbaseInitSetup_1_1_4_x64.msi" # Define the file path $msiPath = "C:\setup\CloudbaseInitSetup_1_1_4_x64.msi" $logPath = "C:\setup\cloud-init.log" # Launch the installer and capture logs $exitCode = Start-Process -FilePath 'msiexec.exe' -ArgumentList "/i `"$msiPath`" /qn /l*v `"$logPath`"" -Wait -PassThru # Check installation status if ($exitCode.ExitCode -eq 0) { Write-Host "Installation successful! Log saved to $logPath" } else { Write-Host "Installation failed with exit code: $($exitCode.ExitCode)" } </File>
-	</Extensions> -->
-	<!-- PART 2 -->
-	<!-- <Extensions xmlns="https://schneegans.de/windows/unattend-generator/">
-		<File path="C:\Windows\Setup\Scripts\unattend-01.ps1">Start-Sleep 120 # Cloudbase-init Part 2 while (!(Select-String -Path 'C:\setup\cloud-init.log' -Pattern 'Installation completed successfully' -Quiet)) { echo "Wait cloud-init installation end..." Start-Sleep 5 } # Check if cloudbase-init service is running, if not, start the service echo "Show cloudinit service" Get-Service -Name cloudbase-init if ((Get-Service -Name cloudbase-init).Status -ne 'Running') { echo "Starting cloudbase-init service" Start-Service -Name cloudbase-init } echo "Move config files to location" # Move conf files to Cloudbase directory copy-item "G:\sysprep\cloudbase-init.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init.conf" -force copy-item "G:\sysprep\cloudbase-init-unattend.conf" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.conf" -force copy-item "G:\sysprep\cloudbase-init-unattend.xml" "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\cloudbase-init-unattend.xml" -force echo "Disable cloudbaseinit at start" # disable cloudbase-init start Set-Service -Name cloudbase-init -StartupType Disabled # Run sysprep cd "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\" start-process -FilePath "C:/Windows/system32/sysprep/sysprep.exe" -ArgumentList "/generalize /oobe /mode:vm /unattend:cloudbase-init-unattend.xml" -wait </File>
-	</Extensions> -->
 </unattend>

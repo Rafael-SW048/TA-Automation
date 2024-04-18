@@ -20,6 +20,7 @@ Try {
   Set-Service -Name cloudbase-init -StartupType Disabled -ErrorAction Stop
 
   # Run sysprep
+  echo "Run sysprep"
   cd "C:\Program Files\Cloudbase Solutions\Cloudbase-Init\conf\"
   start-process -FilePath "C:/Windows/system32/sysprep/sysprep.exe" -ArgumentList "/generalize /oobe /mode:vm /unattend:cloudbase-init-unattend.xml" -wait -ErrorAction Stop
 }

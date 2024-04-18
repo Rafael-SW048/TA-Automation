@@ -41,6 +41,8 @@ details.
     powershell.exe -ExecutionPolicy ByPass -File Install-WMF3Hotfix.ps1 -Verbose
 #>
 
+Write-Output "Install WM"
+
 [CmdletBinding()]
 Param()
 

@@ -1,0 +1,8 @@
+{
+  "vm_config": {
+    "name": "VM-CloudGaming-01",
+    "desc": "Windows 11 Pro with cloudbase-init",
+    "cores": 8,
+    "memory": 8
+  }
+}

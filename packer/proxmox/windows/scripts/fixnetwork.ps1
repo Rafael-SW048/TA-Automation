@@ -6,6 +6,7 @@
 # http://blogs.msdn.com/b/powershell/archive/2009/04/03/setting-network-location-to-private.aspx
 
 function Set-NetworkTypeToPrivate {
+  Write-Output "Set-NetworkTypeToPrivate"
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPositionalParameters', '')]
   param()
   # Network location feature was only introduced in Windows Vista - no need to bother with this

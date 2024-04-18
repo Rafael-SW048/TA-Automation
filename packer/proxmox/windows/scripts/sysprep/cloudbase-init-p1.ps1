@@ -1,4 +1,5 @@
 try {
+  Start-Sleep 120
   # install Cloudbase-Init
   echo "Create setup directory"
   mkdir "c:\setup" -ErrorAction Stop
@@ -26,6 +27,7 @@ try {
   }
 
   echo "Done"
+  echo "---------------------------------------------"
 } catch {
   Write-Output "This is the error...  Error Details: $($_.Exception.Message)"
 }

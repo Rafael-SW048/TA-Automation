@@ -35,6 +35,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
     cores = "${var.vm_cpu_cores}"
     sockets = "${var.vm_sockets}"
     os = "${var.os}"
+    cpu_type = "host"
     // bios = "ovmf"
 
     network_adapters {
@@ -96,7 +97,27 @@ build {
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
+        pause_before      = "180s"
         scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
+    }
+
+    provisioner "powershell" {
+        elevated_user     = "${var.winrm_username}"
+        elevated_password = "${var.winrm_password}"
+        pause_before      = "30s"
+        scripts           = ["${path.root}/../scripts/sysprep/win-activation.ps1"]
+    }
+
+    provisioner "powershell" {
+        elevated_user     = "${var.winrm_username}"
+        elevated_password = "${var.winrm_password}"
+        pause_before      = "30s"
+        // scripts           = ["${path.root}/../scripts/sysprep/win-updates.ps1"]
+        scripts           = ["${path.root}/../scripts/win-updates-2.ps1"]
+    }
+
+    provisioner "windows-restart" {
+        restart_timeout = "15m"
     }
 
     provisioner "powershell" {
