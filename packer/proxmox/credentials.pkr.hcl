@@ -5,5 +5,4 @@ proxmox_skip_tls_verify = true
 proxmox_node = "pve"
 proxmox_pool = "Templates"
 proxmox_iso_storage = "local"
-proxmox_vm_storage = "local-lvm"
 

@@ -1,0 +1,7 @@
+h5py==3.11.0
+hcl==0.2.1
+numpy==1.26.4
+prompt-toolkit==3.0.43
+pyhcl==0.4.5
+tree-format==0.1.2
+wcwidth==0.2.13

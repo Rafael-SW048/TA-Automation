@@ -36,6 +36,8 @@ source "proxmox-iso" "win11-cloudbase-init" {
     sockets = "${var.vm_sockets}"
     os = "${var.os}"
     cpu_type = "host"
+    machine = "q35"
+    scsi_controller = "virtio-scsi-single"
     // bios = "ovmf"
 
     network_adapters {
@@ -51,6 +53,8 @@ source "proxmox-iso" "win11-cloudbase-init" {
         disk_size = "${var.vm_disk_size}"
         storage_pool = "${var.proxmox_vm_storage}"
         format = "raw"
+        ssd = true
+	    cache_mode="writeback"
     }
 
     additional_iso_files {
@@ -86,8 +90,8 @@ source "proxmox-iso" "win11-cloudbase-init" {
     winrm_insecure = true
     winrm_use_ssl = true
     winrm_no_proxy = true
-    winrm_timeout = "120m"
-    task_timeout = "40m"
+    winrm_timeout = "12h"
+    task_timeout = "4h"
 }
 
 build {
@@ -112,18 +116,13 @@ build {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
         pause_before      = "30s"
-        // scripts           = ["${path.root}/../scripts/sysprep/win-updates.ps1"]
-        scripts           = ["${path.root}/../scripts/win-updates-2.ps1"]
-    }
-
-    provisioner "windows-restart" {
-        restart_timeout = "15m"
+        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
     }
 
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
         pause_before      = "30s"
-        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
+        scripts           = ["${path.root}/../scripts/sysprep/setup-application.ps1"]
     }
 }

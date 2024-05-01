@@ -57,26 +57,62 @@ variable "vm_template_id" {
   }
 }
 
-variable "vm_config" {
-  type = object({
-    name               = string
-    desc               = string
-    cores              = number
-    memory             = number
-    clone              = string
-    dns                = string
-    ip                 = string
-    gateway            = string
-  })
+
+variable "vms_config" {
+  type = map(object({
+    name        = string
+    desc        = string
+    cores       = number
+    cpu_type    = string
+    memory      = number
+    clone       = string
+    dns         = string
+    ip          = string
+    gateway     = string
+    pci_device      = string
+    SID         = string
+  }))
 
   default = {
-    name               = "VM-CloudGaming-default"
-    desc               = "CG-Default - windows 11 Pro with cloudbase-init"
-    cores              = 8
-    memory             = 8192
-    clone              = "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"
-    dns                = "192.168.10.1" # Only for placeholder
-    ip                 = "192.168.10.10/24" # Only for placeholder
-    gateway            = "192.168.10.1" # Only for placeholder
+    "default" = {
+      name        = "VM-CloudGaming-default"
+      desc        = "CG-Default - windows 11 Pro with cloudbase-init"
+      cores       = 6
+      cpu_type    = "host"
+      memory      = 8192
+      clone       = "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"
+      dns         = "192.168.10.1" # Placeholder
+      ip          = "192.168.10.10/24" # Placeholder
+      gateway     = "192.168.10.1" # Placeholder
+      pci_device  = ""
+      SID         = "VM-CloudGaming-default"
+    }
   }
 }
+
+
+# variable "vm_config" {
+#   type = object({
+#     name               = string
+#     desc               = string
+#     cores              = number
+#     cpu_type           = string
+#     memory             = number
+#     clone              = string
+#     dns                = string
+#     ip                 = string
+#     gateway            = string
+#   })
+
+#   default = {
+#     name               = "VM-CloudGaming-default"
+#     desc               = "CG-Default - windows 11 Pro with cloudbase-init"
+#     cores              = 6
+#     cpu_type           = "host"
+#     memory             = 8192
+#     clone              = "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"
+#     dns                = "192.168.10.1" # Only for placeholder
+#     ip                 = "192.168.10.10/24" # Only for placeholder
+#     gateway            = "192.168.10.1" # Only for placeholder
+#   }
+# }

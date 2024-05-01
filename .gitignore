@@ -31,3 +31,19 @@ credentials.json
 *.iso
 *.msi
 *.exe
+
+# Ignore test, temp, and note file
+test.*
+temp.*
+note.*
+
+# Ignore python cache files
+__pycache__/
+*.pyc
+venv/
+
+# Ignore terraform state and other files
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl

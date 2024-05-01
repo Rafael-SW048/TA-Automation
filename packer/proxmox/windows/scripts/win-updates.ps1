@@ -1,11 +1,10 @@
 Write-Output "Install Windows Updates"
 
-[Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSReviewUnusedParameter', '')]
-param($global:RestartRequired = 0,
-  $global:MoreUpdates = 0,
-  $global:MaxCycles = 5,
-  $MaxUpdatesPerCycle = 500,
-  $BeginWithRestart = 0)
+$global:RestartRequired = 0
+$global:MoreUpdates = 0
+$global:MaxCycles = 5
+$MaxUpdatesPerCycle = 500
+$BeginWithRestart = 0
 
 $Logfile = "C:\Windows\Temp\win-updates.log"
 
@@ -62,15 +61,12 @@ function Check-ContinueRestartOrEnd() {
   }
 }
 
-function Install-WindowsUpdates()
- {
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
+function Install-WindowsUpdates {
   param()
   $script:Cycles++
   LogWrite "Evaluating Available Updates with limit of $($MaxUpdatesPerCycle):"
   $UpdatesToDownload = New-Object -ComObject 'Microsoft.Update.UpdateColl'
-  $script:i = 0;
+  $script:i = 0
   $CurrentUpdates = $SearchResult.Updates
   while ($script:i -lt $CurrentUpdates.Count -and $script:CycleUpdateCount -lt $MaxUpdatesPerCycle) {
     $Update = $CurrentUpdates.Item($script:i)
@@ -105,19 +101,18 @@ function Install-WindowsUpdates()
   }
   else {
     LogWrite 'Downloading Updates...'
-    $ok = 0;
-    while (! $ok) {
+    $ok = $false
+    while (-not $ok) {
       try {
         $Downloader = $UpdateSession.CreateUpdateDownloader()
         $Downloader.Updates = $UpdatesToDownload
         $Downloader.Download()
-        $ok = 1;
+        $ok = $true
       }
       catch {
         LogWrite $_.Exception | Format-List -force
         LogWrite "Error downloading updates. Retrying in 30s."
-        $script:attempts = $script:attempts + 1
-        Start-Sleep -s 30
+        Start-Sleep -Seconds 30
       }
     }
   }
@@ -126,7 +121,7 @@ function Install-WindowsUpdates()
   [bool]$rebootMayBeRequired = $false
   LogWrite 'The following updates are downloaded and ready to be installed:'
   foreach ($Update in $SearchResult.Updates) {
-    if (($Update.IsDownloaded)) {
+    if ($Update.IsDownloaded) {
       LogWrite "> $($Update.Title)"
       $UpdatesToInstall.Add($Update) | Out-Null
 
@@ -141,7 +136,7 @@ function Install-WindowsUpdates()
     $global:MoreUpdates = 0
     $global:RestartRequired = 0
     & "G:\ConfigureRemotingForAnsible.ps1"
-    break
+    return
   }
 
   if ($rebootMayBeRequired) {
@@ -177,28 +172,25 @@ function Install-WindowsUpdates()
   Check-ContinueRestartOrEnd
 }
 
-function Check-WindowsUpdates() {
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseDeclaredVarsMoreThanAssignments', '')]
-  [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSUseSingularNouns', '')]
-  param()
+function Check-WindowsUpdates {
   LogWrite "Checking For Windows Updates"
   $Username = $env:USERDOMAIN + "\" + $env:USERNAME
   LogWrite "Script: $script:ScriptPath `nScript User: $Username `nStarted: $(Get-Date)"
 
   $script:UpdateSearcher = $script:UpdateSession.CreateUpdateSearcher()
-  $script:successful = $FALSE
+  $script:successful = $false
   $script:attempts = 0
   $script:maxAttempts = 12
   while (-not $script:successful -and $script:attempts -lt $script:maxAttempts) {
     try {
       $script:SearchResult = $script:UpdateSearcher.Search("IsInstalled=0 and Type='Software' and IsHidden=0")
-      $script:successful = $TRUE
+      $script:successful = $true
     }
     catch {
       LogWrite $_.Exception | Format-List -force
       LogWrite "Search call to UpdateSearcher was unsuccessful. Retrying in 10s."
-      $script:attempts = $script:attempts + 1
-      Start-Sleep -s 10
+      $script:attempts++
+      Start-Sleep -Seconds 10
     }
   }
 
@@ -234,9 +226,6 @@ function Check-WindowsUpdates() {
 $script:ScriptName = $MyInvocation.MyCommand.ToString()
 $script:ScriptPath = $MyInvocation.MyCommand.Path
 $script:UpdateSession = New-Object -ComObject 'Microsoft.Update.Session'
-$script:UpdateSession.ClientApplicationID = 'Packer Windows Update Installer'
-$script:UpdateSearcher = $script:UpdateSession.CreateUpdateSearcher()
-$script:SearchResult = New-Object -ComObject 'Microsoft.Update.UpdateColl'
 $script:Cycles = 0
 $script:CycleUpdateCount = 0
 

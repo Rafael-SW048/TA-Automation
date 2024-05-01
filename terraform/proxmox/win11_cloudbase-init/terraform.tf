@@ -25,29 +25,42 @@ provider "proxmox" {
 }
 
 resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
+  for_each = var.vms_config
+
   node_name   = var.proxmox_node
   pool_id     = var.proxmox_pool
 
-  name = var.vm_config.name
-  description = var.vm_config.desc
+  name = each.value.name
+  description = each.value.desc
 
   operating_system {
     type = "win11"
   }
 
   cpu {
-    cores   = var.vm_config.cores
+    cores   = each.value.cores
     sockets = 1
+    type = each.value.cpu_type
   }
 
   memory {
-    dedicated = var.vm_config.memory
+    dedicated = each.value.memory
+  }
+
+  # Add a unique host PCI device for each VM
+  dynamic "hostpci" {
+    for_each = each.value.pci_device != "" ? [1] : []
+    content {
+      device = "hostpci0"
+      id     = each.value.pci_device
+      # id     = null
+    }
   }
 
   clone {
       # datastore_id = var.storage
       node_name = var.proxmox_node
-      vm_id = lookup(var.vm_template_id, var.vm_config.clone, -1)
+      vm_id = lookup(var.vm_template_id, each.value.clone, -1)
       full  = var.vm_full_clone
       retries = 2
   }
@@ -62,26 +75,93 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
     model   = var.network_model
   }
 
-  lifecycle {
-    ignore_changes = [
-      vga,
-    ]
-  }
-
   initialization {
     datastore_id = var.storage
-  #   dns {
-  #     servers = [
-  #       var.vm_config.dns
-  #     ]
-  #   }
-  #   ip_config {
-  #     ipv4 {
-  #       address = var.vm_config.ip
-  #       gateway = var.vm_config.gateway
-  #     }
-  #   }
+    # dns {
+    #   servers = [each.value.dns]
+    # }
+    # ip_config {
+    #   ipv4 {
+    #     address = each.value.ip
+    #     gateway = each.value.gateway
+    #   }
+    # }
   }
+
+  # connection {
+  #   type  = "winrm",
+  #   user = "admin"
+  #   password = "admin"
+  #   host = self.
+  # }
+
+  # provisioner "remote-exec" {
+    
+  # }
 }
+
+
+
+
+# resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
+#   node_name   = var.proxmox_node
+#   pool_id     = var.proxmox_pool
+
+#   name = var.vm_config.name
+#   description = var.vm_config.desc
+
+#   operating_system {
+#     type = "win11"
+#   }
+
+#   cpu {
+#     cores   = var.vm_config.cores
+#     sockets = 1
+#     type = "host"
+#   }
+
+#   memory {
+#     dedicated = var.vm_config.memory
+#   }
+
+#   clone {
+#       # datastore_id = var.storage
+#       node_name = var.proxmox_node
+#       vm_id = lookup(var.vm_template_id, var.vm_config.clone, -1)
+#       full  = var.vm_full_clone
+#       retries = 2
+#   }
+
+#   agent {
+#     # read 'Qemu guest agent' section, change to true only when ready
+#     enabled = true
+#   }
+
+#   network_device {
+#     bridge  = var.network_bridge
+#     model   = var.network_model
+#   }
+
+#   lifecycle {
+#     ignore_changes = [
+#       vga,
+#     ]
+#   }
+
+#   initialization {
+#     datastore_id = var.storage
+#   #   dns {
+#   #     servers = [
+#   #       var.vm_config.dns
+#   #     ]
+#   #   }
+#   #   ip_config {
+#   #     ipv4 {
+#   #       address = var.vm_config.ip
+#   #       gateway = var.vm_config.gateway
+#   #     }
+#   #   }
+#   }
+# }
 
 
