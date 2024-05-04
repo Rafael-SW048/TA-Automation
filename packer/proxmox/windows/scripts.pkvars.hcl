@@ -1,3 +1,3 @@
 iso_scripts = "local:iso/scripts_cloudbase-init.iso"
-iso_scripts_checksum = "sha256:1a58ecc1b6a80e2d7a494e8e6f414a27eba0d6e40567b1631586019549ea7f20"
-// iso_scripts_checksum = "sha256:1a58ecc1b6a80e2d7a494e8e6f414a27eba0d6e40567b1631586019549ea7f20" # dummy for validate purpose
+iso_scripts_checksum = "sha256:f94c0faeb1d6b10f47e1b52757762c94eaeb1a6a5743d103b00d5755e1357c5a"
+// iso_scripts_checksum = "sha256:f94c0faeb1d6b10f47e1b52757762c94eaeb1a6a5743d103b00d5755e1357c5a" # dummy for validate purpose

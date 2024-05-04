@@ -55,6 +55,9 @@
 # Support -Verbose option
 [CmdletBinding()]
 
+$logFile = "C:\script.log"
+"Starting script ConfigureRemotingForAnsible.ps1" | Out-File -FilePath $logFile -Append
+
 Param (
     [string]$SubjectName = $env:COMPUTERNAME,
     [int]$CertValidityDays = 1095,
@@ -453,3 +456,5 @@ Else
     Throw "Unable to establish an HTTP or HTTPS remoting session."
 }
 Write-VerboseLog "PS Remoting has been successfully configured for Ansible."
+
+"Finished script ConfigureRemotingForAnsible.ps1" | Out-File -FilePath $logFile -Append

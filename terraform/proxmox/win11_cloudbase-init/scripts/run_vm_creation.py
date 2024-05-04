@@ -14,19 +14,15 @@ def run_command(command):
         print("Error during command execution. Exiting.")
         sys.exit(1)
 
-def main():
+def update_terraform_state():
     try:
         # Run the user_vm_config.py script
-        run_command(["python3", "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init/user_vm_config.py"])
+        run_command(["python3", "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init/scripts/user_vm_config.py"])
 
         # Run the Terraform commands
         run_command(["terraform", "validate"])
-        run_command(["terraform", "plan", "--var-file=../credentials.tfvars", "-out", "test.plan"])
-        run_command(["terraform", "apply", "-auto-approve", "test.plan"])
+        run_command(["terraform", "apply", "-auto-approve", "--var-file=../credentials.tfvars"])
 
         os.remove("test.plan")
     except KeyboardInterrupt:
         print("Script interrupted. Exiting.")
-
-if __name__ == "__main__":
-    main()

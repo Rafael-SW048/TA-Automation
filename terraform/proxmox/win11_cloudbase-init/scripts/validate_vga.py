@@ -54,8 +54,6 @@ def get_vm_pci_devices(vm_id):
 
     return pci_devices
 
-
-
 def get_all_vm_pci_devices():
   """
   This function iterates through all VMs and retrieves their assigned PCI devices.

@@ -5,7 +5,7 @@ iso_checksum = "sha256:C299F39A120EFAAEAFC4802C854CD67634643205D8272A4CF16B64927
 iso_virtio = "local:iso/virtio-win-0.1.248.iso"
 iso_virtio_checksum = "sha256:d5b5739cf297f0538d263e30678d5a09bba470a7c6bcbd8dff74e44153f16549"
 iso_autounattend = "local:iso/autounattend_win11_cloudbase-init.iso"
-iso_autounattend_checksum = "sha256:393302316f40dadb1c18b9f3f01c2572177427d7d0365e57ee7c94a08ab9e2a2"
+iso_autounattend_checksum = "sha256:8515407b32829859ca6a43f665aefd07b5a11a983496e5072420c68e29789713"
 vm_cpu_cores = "6"
 vm_memory = "8192"
 vm_disk_size = "512G"
@@ -15,4 +15,3 @@ os = "win11"
 
 winrm_username = "admin"
 winrm_password = "admin"
-// winrm_password = ""

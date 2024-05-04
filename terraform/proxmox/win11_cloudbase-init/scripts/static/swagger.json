@@ -1,0 +1,163 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "VM Management API",
+    "description": "This API allows for managing virtual machines including creation, deletion, and querying available templates.",
+    "version": "1.0"
+  },
+  "host": "api.example.com",
+  "schemes": ["https"],
+  "basePath": "/",
+  "paths": {
+    "/vms": {
+      "post": {
+        "summary": "Create a VM",
+        "description": "Creates a virtual machine (VM) with the given configuration parameters.",
+        "parameters": [
+          {
+            "name": "vm_config",
+            "in": "body",
+            "required": true,
+            "description": "JSON object containing configuration for the VM",
+            "schema": {
+              "$ref": "#/definitions/VMConfig"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "VM created successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "VM configuration added successfully"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid configuration or missing required fields",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/vms/{vm_sid}": {
+      "delete": {
+        "summary": "Delete a VM",
+        "description": "Deletes the VM with the specified SID.",
+        "parameters": [
+          {
+            "name": "vm_sid",
+            "in": "path",
+            "required": true,
+            "description": "The SID of the VM to delete",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "VM deleted successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "example": "VM configuration deleted successfully"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No VM with SID found",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    },
+    "/vms/templates": {
+      "get": {
+        "summary": "List VM Templates",
+        "description": "Retrieves a list of available VM templates.",
+        "responses": {
+          "200": {
+            "description": "List of available VM templates",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "500": {
+            "description": "Server error",
+            "schema": {
+              "$ref": "#/definitions/ErrorModel"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "VMConfig": {
+      "type": "object",
+      "required": ["name", "desc", "SID"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the VM"
+        },
+        "desc": {
+          "type": "string",
+          "description": "Description of the VM"
+        },
+        "SID": {
+          "type": "string",
+          "description": "System ID of the VM"
+        },
+        "cores": {
+          "type": "integer",
+          "description": "Number of CPU cores",
+          "default": 6
+        },
+        "memory": {
+          "type": "integer",
+          "description": "Amount of RAM in MB",
+          "default": 8192
+        }
+      }
+    },
+    "ErrorModel": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "Error code indicating the type of error"
+        },
+        "message": {
+          "type": "string",
+          "description": "Description of the error"
+        }
+      }
+    }
+  }
+}

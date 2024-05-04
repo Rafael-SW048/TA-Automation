@@ -1,3 +1,6 @@
+$logFile = "C:\script.log"
+"Starting script fixnetwork.ps1" | Out-File -FilePath $logFile -Append
+
 # You cannot enable Windows PowerShell Remoting on network connections that are set to Public
 # Spin through all the network locations and if they are set to Public, set them to Private
 # using the INetwork interface:
@@ -6,7 +9,6 @@
 # http://blogs.msdn.com/b/powershell/archive/2009/04/03/setting-network-location-to-private.aspx
 
 function Set-NetworkTypeToPrivate {
-  Write-Output "Set-NetworkTypeToPrivate"
   [Diagnostics.CodeAnalysis.SuppressMessageAttribute('PSAvoidUsingPositionalParameters', '')]
   param()
   # Network location feature was only introduced in Windows Vista - no need to bother with this
@@ -29,3 +31,5 @@ function Set-NetworkTypeToPrivate {
 }
 
 Set-NetworkTypeToPrivate
+
+"Finished script fixnetwork.ps1" | Out-File -FilePath $logFile -Append

@@ -1,3 +1,6 @@
+$logFile = "C:\script.log"
+"Starting script win-updates.ps1" | Out-File -FilePath $logFile -Append
+
 Write-Output "Install Windows Updates"
 
 $global:RestartRequired = 0
@@ -241,3 +244,5 @@ if ($global:MoreUpdates -eq 1) {
 else {
   Check-ContinueRestartOrEnd
 }
+
+"Finished script win-updates.ps1" | Out-File -FilePath $logFile -Append

@@ -41,17 +41,17 @@ details.
     powershell.exe -ExecutionPolicy ByPass -File Install-WMF3Hotfix.ps1 -Verbose
 #>
 
-Write-Output "Install WM"
-
 [CmdletBinding()]
 Param()
+
+$logFile = "C:\script.log"
+"Starting script Install-WMF3Hotfix.ps1" | Out-File -FilePath $logFile -Append
 
 $ErrorActionPreference = "Stop"
 if ($verbose) {
     $VerbosePreference = "Continue"
 }
 
-# Function to run a process
 Function Run-Process($executable, $arguments) {
     $process = New-Object -TypeName System.Diagnostics.Process
     $psi = $process.StartInfo
@@ -155,3 +155,5 @@ if ($exit_code -eq 3010) {
     Write-Verbose -Message "hotfix $kb install complete"
 }
 exit $exit_code
+
+"Finished script Install-WMF3Hotjson" | Out-File -FilePath $logFile -Append

@@ -36,14 +36,13 @@ source "proxmox-iso" "win11-cloudbase-init" {
     sockets = "${var.vm_sockets}"
     os = "${var.os}"
     cpu_type = "host"
-    machine = "q35"
-    scsi_controller = "virtio-scsi-single"
+    // machine = "q35"
+    // scsi_controller = "virtio-scsi-single"
     // bios = "ovmf"
 
     network_adapters {
             model = "e1000"
             bridge = "vmbr0"
-            // vlan_tag = "102"
             firewall = "false"
     }
 
@@ -54,7 +53,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
         storage_pool = "${var.proxmox_vm_storage}"
         format = "raw"
         ssd = true
-	    cache_mode="writeback"
+	    // cache_mode="writeback"
     }
 
     additional_iso_files {

@@ -3,15 +3,18 @@
 # Initial Provider Configuration for Proxmox
 
 terraform {
+  required_version = ">= 1.8.0"
 
-    required_version = ">= 1.8.0"
-
-    required_providers {
-        proxmox = {
-            source = "bpg/proxmox"
-            version = ">= 0.53.1"
-        }
+  required_providers {
+    proxmox = {
+      source  = "bpg/proxmox"
+      version = ">= 0.53.1"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.1.0"
+    }
+  }
 }
 
 provider "proxmox" {
@@ -88,16 +91,31 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
     # }
   }
 
-  # connection {
-  #   type  = "winrm",
-  #   user = "admin"
-  #   password = "admin"
-  #   host = self.
-  # }
+  provisioner "local-exec" {
+    command = "./scripts/test.sh ${self.vm_id}"
+    when    = create
+  }
+}
 
-  # provisioner "remote-exec" {
-    
-  # }
+resource "null_resource" "remote_exec" {
+  depends_on = [proxmox_virtual_environment_vm.win11-cloudbase-init]
+
+  for_each = proxmox_virtual_environment_vm.win11-cloudbase-init
+
+  connection {
+    type     = "winrm"
+    user     = "admin"
+    password = "admin"
+    host     = "${chomp(file("ip_address_${each.value.vm_id}.txt"))}"
+  }
+
+  provisioner "remote-exec" {
+    when    = create
+    inline = [
+      "echo 'Connected to the remote host'"
+      # Add your commands here
+    ]
+  }
 }
 
 

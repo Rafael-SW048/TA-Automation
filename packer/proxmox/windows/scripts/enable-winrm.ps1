@@ -1,3 +1,6 @@
+$logFile = "C:\script.log"
+"Starting script enable-winrm.ps1" | Out-File -FilePath $logFile -Append
+
 Write-Output "Enable WinRM"
 $NetworkListManager = [Activator]::CreateInstance([Type]::GetTypeFromCLSID([Guid]"{DCB00C01-570F-4A9B-8D69-199FDBA5723B}"))
 $Connections = $NetworkListManager.GetNetworkConnections()
@@ -19,3 +22,5 @@ netsh advfirewall firewall set rule name="Windows Remote Management (HTTPS-In)" 
 Set-WSManInstance -ResourceURI WinRM/Config/Client -ValueSet @{TrustedHosts="*"}
 Set-Service winrm -startuptype "auto"
 Restart-Service winrm
+
+"Finished script enable-winrm.ps1" | Out-File -FilePath $logFile -Append
