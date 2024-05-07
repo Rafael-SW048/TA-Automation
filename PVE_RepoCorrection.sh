@@ -47,9 +47,3 @@ echo "Modified $SOURCES_LIST_FILE and $CEPH_LIST_FILE successfully."
 
 # Update package lists
 apt-get update
-
-# Upgrade installed packages
-apt-get upgrade -y
-apt-get install lsb-release -y
-apt install build-essential -y
-apt-get install software-properties-common -y
