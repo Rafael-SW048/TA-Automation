@@ -6,16 +6,16 @@ handle_error() {
     exit 1
 }
 
-# Install ZeroTier
+# # Install ZeroTier
 curl -s https://install.zerotier.com | bash || handle_error "ZeroTier installation failed"
 
-# Check ZeroTier status IF your host is using private network
+# # Check ZeroTier status IF your host is using private network
 zerotier_status=$(zerotier-cli status) || handle_error "Failed to get ZeroTier status"
 
-# Extract the status (ONLINE, etc.)
+# # Extract the status (ONLINE, etc.)
 status=$(echo "$zerotier_status" | cut -d ' ' -f -1)
 
-# Check if ZeroTier is online
+# # Check if ZeroTier is online
 if [ "$status" == "ONLINE" ]; then
     # Join the ZeroTier network based on the defined network ID
     ZEROTIER_NETWORK_ID="9e1948db63d35842"
