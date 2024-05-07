@@ -3,6 +3,7 @@
 # Define the filename of the sources.list file and ceph.list file
 SOURCES_LIST_FILE="/etc/apt/sources.list"
 CEPH_LIST_FILE="/etc/apt/sources.list.d/ceph.list"
+ENTERPRISE_REPO_LIST_FILE="/etc/apt/sources.list.d/pve-enterprise.list"
 
 # Define the new content for sources.list file
 NEW_CONTENT_SOURCES=$(cat <<EOF
@@ -11,11 +12,6 @@ deb http://deb.debian.org/debian bookworm-updates main contrib
 
 # security updates
 deb http://security.debian.org/debian-security bookworm-security main contrib
-
-# Proxmox VE No-Subscription Repository
-# This repository seems to be duplicated. Remove one of the lines.
-deb http://ftp.debian.org/debian bookworm main contrib
-deb http://ftp.debian.org/debian bookworm-updates main contrib
 
 # Proxmox VE pve-no-subscription repository provided by proxmox.com,
 # NOT recommended for production use
@@ -39,7 +35,9 @@ cp "$SOURCES_LIST_FILE" "$SOURCES_LIST_FILE.bak"
 cp "$CEPH_LIST_FILE" "$CEPH_LIST_FILE.bak"
 
 # Comment out existing entries in ceph.list file
+sed -i '/^[^#]/ s/^/#/' "$SOURCES_LIST_FILE"
 sed -i '/^[^#]/ s/^/#/' "$CEPH_LIST_FILE"
+sed -i '/^[^#]/ s/^/#/' "$ENTERPRISE_REPO_LIST_FILE"
 
 # Write the new content to the files
 echo "$NEW_CONTENT_SOURCES" > "$SOURCES_LIST_FILE"
