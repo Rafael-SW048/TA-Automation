@@ -32,10 +32,17 @@ warp-cli registration new || handle_error "Failed to register with Cloudflare VP
 warp-cli connect || handle_error "Failed to connect to Cloudflare VPN"
 curl https://www.cloudflare.com/cdn-cgi/trace/ || handle_error "Failed to verify Cloudflare VPN connection"
 
-# Install Packer
+# # Install Packer
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - || handle_error "Failed to add HashiCorp GPG key"
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com bookworm main" -y || handle_error "Failed to add HashiCorp repository"
 apt-get update && apt-get install packer -y || handle_error "Failed to install Packer"
 packer plugins install github.com/hashicorp/proxmox || handle_error "Failed to install Packer plugin for Proxmox"
+
+# # Install Terraform
+apt-get update && apt-get install -y gnupg software-properties-common || handle_error "Failed to install prerequisite packages for Terraform"
+wget -O- https://apt.releases.hashicorp.com/gpg | gpg --dearmor | tee /usr/share/keyrings/hashicorp-archive-keyring.gpg > /dev/null || handle_error "Failed to download and add HashiCorp GPG key"
+gpg --no-default-keyring --keyring /usr/share/keyrings/hashicorp-archive-keyring.gpg --fingerprint || handle_error "Failed to verify HashiCorp GPG key"
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list || handle_error "Failed to add HashiCorp repository"
+apt-get update && apt-get install terraform -y || handle_error "Failed to install Terraform"
 
 echo "Script execution completed successfully."
