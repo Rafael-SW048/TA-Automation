@@ -33,6 +33,7 @@ warp-cli connect || handle_error "Failed to connect to Cloudflare VPN"
 curl https://www.cloudflare.com/cdn-cgi/trace/ || handle_error "Failed to verify Cloudflare VPN connection"
 
 # # Install Packer
+apt-get update && apt-get install -y gnupg software-properties-common || handle_error "Failed to install prerequisite packages for Packer"
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - || handle_error "Failed to add HashiCorp GPG key"
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com bookworm main" -y || handle_error "Failed to add HashiCorp repository"
 apt-get update && apt-get install packer -y || handle_error "Failed to install Packer"
