@@ -37,7 +37,7 @@ apt-get update && apt-get install -y gnupg software-properties-common || handle_
 curl -fsSL https://apt.releases.hashicorp.com/gpg | apt-key add - || handle_error "Failed to add HashiCorp GPG key"
 apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com bookworm main" -y || handle_error "Failed to add HashiCorp repository"
 apt-get update && apt-get install packer -y || handle_error "Failed to install Packer"
-packer plugins install github.com/hashicorp/proxmox || handle_error "Failed to install Packer plugin for Proxmox"
+# packer plugins install github.com/hashicorp/proxmox || handle_error "Failed to install Packer plugin for Proxmox"
 
 # # Install Terraform
 apt-get update && apt-get install -y gnupg software-properties-common || handle_error "Failed to install prerequisite packages for Terraform"
