@@ -55,19 +55,19 @@
 # Support -Verbose option
 [CmdletBinding()]
 
-$logFile = "C:\script.log"
-"Starting script ConfigureRemotingForAnsible.ps1" | Out-File -FilePath $logFile -Append
-
 Param (
     [string]$SubjectName = $env:COMPUTERNAME,
     [int]$CertValidityDays = 1095,
     [switch]$SkipNetworkProfileCheck,
     $CreateSelfSignedCert = $true,
     [switch]$ForceNewSSLCert,
-    [switch]$GlobalHttpFirewallAccess,
+    [switch]$GlobalHttpFirewallAccess,  
     [switch]$DisableBasicAuth = $false,
     [switch]$EnableCredSSP
 )
+
+$logFile = "C:\script.log"
+"Starting script ConfigureRemotingForAnsible.ps1" | Out-File -FilePath $logFile -Append
 
 Function Write-Log
 {

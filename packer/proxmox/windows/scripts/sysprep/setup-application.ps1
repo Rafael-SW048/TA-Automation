@@ -165,6 +165,10 @@ try {
 
 	echo "------------------------------------------------"
 
+	echo "Cloning network configuration dependencies..."
+	git clone https://github.com/JordanSihombing/ZeroTierAuto.git "C:\setup\scripts\ZeroTierAuto"
+	echo "Done"
+
 } catch {
 	Write-Output "This is the error...  Error Details: $($_.Exception.Message)"
 	echo "------------------------------------------------"

@@ -56,7 +56,6 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
     content {
       device = "hostpci0"
       id     = each.value.pci_device
-      # id     = null
     }
   }
 
@@ -100,24 +99,37 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
 resource "null_resource" "remote_exec" {
   depends_on = [proxmox_virtual_environment_vm.win11-cloudbase-init]
 
-  for_each = proxmox_virtual_environment_vm.win11-cloudbase-init
+  for_each = keys(var.vms_config)
 
   connection {
     type     = "winrm"
     user     = "admin"
     password = "admin"
-    host     = "${chomp(file("ip_address_${each.value.vm_id}.txt"))}"
+    # host     = "${chomp(file("ip_address_${each.value.vm_id}.txt"))}"
+    host = "${chomp(file(format("ip_address_%s.txt", var.vms_config[each.value].vm_id)))}"
+    timeout  = "5m"
   }
 
   provisioner "remote-exec" {
-    when    = create
+    when = create
     inline = [
-      "echo 'Connected to the remote host'"
-      # Add your commands here
+      "echo 'Connected to VM with index:', ${each.key}",  # Use each.key for index type
+      # Utilize var.vms_config[each.value] to access information like CPU cores
+      "echo 'VM Cores:', ${var.vms_config[each.value].SID}",
+      # Execute the PowerShell script
+      "powershell -Command \""
+        + "$currentName = $env:computername; "
+        + "$newName = '${var.vms_config[each.value].SID}'; "  # Use SID as the new name
+        + "if ($newName -eq '') { Write-Host 'Error: Please enter a new computer name.'; exit 1 }; "
+        + "Try { Rename-Computer -NewName $newName -Force; Write-Host 'Successfully renamed the computer to ''$newName''.' } "
+        + "Catch { Write-Error 'Failed to rename the computer: $($_.Exception.Message)'; exit 1 }; "
+        + "Write-Host 'The computer name change will take effect after a restart.'; "
+        + "Read-Host 'Press Enter to restart now, or any other key to cancel.'; "
+        + "if ($PSCurrentPipelineStatus.IsCompleted) { Restart-Computer -Force }"
+        + "\""
     ]
   }
 }
-
 
 
 

@@ -53,7 +53,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
         storage_pool = "${var.proxmox_vm_storage}"
         format = "raw"
         ssd = true
-	    // cache_mode="writeback"
+	    cache_mode="writeback"
     }
 
     additional_iso_files {

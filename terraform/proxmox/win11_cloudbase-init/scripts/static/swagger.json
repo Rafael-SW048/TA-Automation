@@ -5,8 +5,8 @@
     "description": "This API allows for managing virtual machines including creation, deletion, and querying available templates.",
     "version": "1.0"
   },
-  "host": "api.example.com",
-  "schemes": ["https"],
+  "host": "10.11.1.169:6969",
+  "schemes": ["http"],
   "basePath": "/",
   "paths": {
     "/vms": {
@@ -15,8 +15,8 @@
         "description": "Creates a virtual machine (VM) with the given configuration parameters.",
         "parameters": [
           {
-            "name": "vm_config",
             "in": "body",
+            "name": "vm_config",
             "required": true,
             "description": "JSON object containing configuration for the VM",
             "schema": {
@@ -58,8 +58,8 @@
         "description": "Deletes the VM with the specified SID.",
         "parameters": [
           {
-            "name": "vm_sid",
             "in": "path",
+            "name": "vm_sid",
             "required": true,
             "description": "The SID of the VM to delete",
             "type": "string"
@@ -120,7 +120,11 @@
   "definitions": {
     "VMConfig": {
       "type": "object",
-      "required": ["name", "desc", "SID"],
+      "required": [
+        "name",
+        "desc",
+        "SID"
+      ],
       "properties": {
         "name": {
           "type": "string",
@@ -141,21 +145,46 @@
         },
         "memory": {
           "type": "integer",
-          "description": "Amount of RAM in MB",
+          "description": "Amount of memory in MB",
           "default": 8192
+        },
+        "disk": {
+          "type": "integer",
+          "description": "Size of disk in GB",
+          "default": 100
+        },
+        "cpu_type": {
+          "type": "string",
+          "description": "Type of CPU to use (e.g., host)"
+        },
+        "clone": {
+          "type": "string",
+          "description": "Name of a VM to clone configuration from"
+        },
+        "dns": {
+          "type": "string",
+          "description": "DNS server address for the VM"
+        },
+        "ip": {
+          "type": "string",
+          "description": "Static IP address for the VM"
+        },
+        "gateway": {
+          "type": "string",
+          "description": "Default gateway for the VM"
+        },
+        "pci_device": {
+          "type": "string",
+          "description": "Name of the PCI device to pass through to the VM"
         }
       }
-    },
+    },    
     "ErrorModel": {
       "type": "object",
       "properties": {
-        "code": {
+        "error": {
           "type": "string",
-          "description": "Error code indicating the type of error"
-        },
-        "message": {
-          "type": "string",
-          "description": "Description of the error"
+          "example": "Invalid configuration or missing required fields"
         }
       }
     }
