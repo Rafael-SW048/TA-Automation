@@ -3,7 +3,7 @@
 # Install ZeroTier
 curl -s https://install.zerotier.com | bash
 
-# Check ZeroTier status
+# Check ZeroTier status IF your host is using private network
 zerotier_status=$(zerotier-cli status)
 
 # Extract the status (ONLINE, etc.)
