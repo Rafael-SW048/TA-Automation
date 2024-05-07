@@ -9,7 +9,7 @@
   "schemes": ["http"],
   "basePath": "/",
   "paths": {
-    "/vms": {
+    "/v1/vms": {
       "post": {
         "summary": "Create a VM",
         "description": "Creates a virtual machine (VM) with the given configuration parameters.",
@@ -52,7 +52,7 @@
         }
       }
     },
-    "/vms/{vm_sid}": {
+    "/v1/vms/{vm_sid}": {
       "delete": {
         "summary": "Delete a VM",
         "description": "Deletes the VM with the specified SID.",
@@ -93,7 +93,7 @@
         }
       }
     },
-    "/vms/templates": {
+    "/v1/vms/templates": {
       "get": {
         "summary": "List VM Templates",
         "description": "Retrieves a list of available VM templates.",

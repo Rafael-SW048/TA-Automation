@@ -102,6 +102,6 @@ def test_check_vm_template():
 
 if __name__ == '__main__':
     # test_create_vm()
-    test_delete_vm()
-    # test_check_vm_template()
+    # test_delete_vm()
+    test_check_vm_template()
     # test()
