@@ -6,6 +6,12 @@ handle_error() {
     exit 1
 }
 
+# Upgrade installed packages
+apt-get upgrade -y
+apt-get install lsb-release -y
+apt install build-essential -y
+apt-get install software-properties-common -y
+
 # # Install ZeroTier
 curl -s https://install.zerotier.com | bash || handle_error "ZeroTier installation failed"
 
