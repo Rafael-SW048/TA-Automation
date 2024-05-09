@@ -8,115 +8,6 @@
 		</component>
 	</settings>
 	<settings pass="windowsPE">
-		<component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
-			<SetupUILanguage>
-				<UILanguage>en-US</UILanguage>
-			</SetupUILanguage>
-			<InputLocale>0409:00000409</InputLocale>
-			<SystemLocale>id-ID</SystemLocale>
-			<UILanguage>en-US</UILanguage>
-			<UserLocale>id-ID</UserLocale>
-		</component>
-		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" 
-			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" 
-			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-			<!-- Choose between DiskConfiguration or RunSynchronous -->
-			<DiskConfiguration>
-				<Disk wcm:action="add">
-					<CreatePartitions>
-						<CreatePartition wcm:action="add">
-							<Order>1</Order>
-							<Type>Primary</Type>
-							<Extend>true</Extend>
-						</CreatePartition>
-					</CreatePartitions>
-					<ModifyPartitions>
-						<ModifyPartition wcm:action="add">
-							<Extend>false</Extend>
-							<Format>NTFS</Format>
-							<Letter>C</Letter>
-							<Order>1</Order>
-							<PartitionID>1</PartitionID>
-							<Label>Windows 11</Label>
-						</ModifyPartition>
-					</ModifyPartitions>
-					<DiskID>0</DiskID>
-					<WillWipeDisk>true</WillWipeDisk>
-				</Disk>
-				<WillShowUI>OnError</WillShowUI>
-			</DiskConfiguration>
-			<ImageInstall>
-				<OSImage>
-					<InstallTo>
-						<DiskID>0</DiskID>
-						<!-- PartitionID 1 for DiskConfiguration and 3 for RunSyncronous -->
-						<PartitionID>1</PartitionID>
-					</InstallTo>
-					<WillShowUI>OnError</WillShowUI>
-					<InstallFrom>
-						<MetaData wcm:action="add">
-							<Key>/IMAGE/NAME</Key>
-							<Value>Windows 11 Pro Evaluation</Value>
-						</MetaData>
-					</InstallFrom>
-				</OSImage>
-			</ImageInstall>
-			<UserData>
-				<ProductKey>
-					<Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
-					<WillShowUI>Never</WillShowUI>
-				</ProductKey>
-				<AcceptEula>true</AcceptEula>
-				<FullName>admin</FullName>
-				<Organization>admin</Organization>
-			</UserData>
-			<!-- <RunSynchronous>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>1</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo SELECT DISK=0"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>2</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CLEAN"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>3</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CONVERT GPT"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>4</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CREATE PARTITION EFI SIZE=512"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>5</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo FORMAT QUICK FS=FAT32 LABEL="System""</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>6</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CREATE PARTITION MSR SIZE=16"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>7</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CREATE PARTITION PRIMARY"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>8</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo EXTEND"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>9</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo ASSIGN LETTER=C"</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>10</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo FORMAT QUICK FS=NTFS LABEL="Windows 11""</Path>
-				</RunSynchronousCommand>
-				<RunSynchronousCommand wcm:action="add">
-					<Order>11</Order>
-					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.log" diskpart.exe /s "X:\diskpart.txt""</Path>
-				</RunSynchronousCommand>
-			</RunSynchronous> -->
-		</component>
 		<component name="Microsoft-Windows-PnpCustomizationsWinPE" 
 			publicKeyToken="31bf3856ad364e35" language="neutral" 
 			versionScope="nonSxS" processorArchitecture="amd64" 
@@ -169,8 +60,114 @@
 				</PathAndCredentials>
 			</DriverPaths>
 		</component>
+		<component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+			<SetupUILanguage>
+				<UILanguage>en-US</UILanguage>
+			</SetupUILanguage>
+			<InputLocale>0409:00000409</InputLocale>
+			<SystemLocale>id-ID</SystemLocale>
+			<UILanguage>en-US</UILanguage>
+			<UserLocale>id-ID</UserLocale>
+		</component>
+		<!-- <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" 
+			publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" 
+			xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"> -->
+		<component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+			<!-- Choose between DiskConfiguration or RunSynchronous -->
+			<!-- <DiskConfiguration>
+				<Disk wcm:action="add">
+					<CreatePartitions>
+						<CreatePartition wcm:action="add">
+							<Order>1</Order>
+							<Type>Primary</Type>
+							<Extend>true</Extend>
+						</CreatePartition>
+					</CreatePartitions>
+					<ModifyPartitions>
+						<ModifyPartition wcm:action="add">
+							<Extend>false</Extend>
+							<Format>NTFS</Format>
+							<Letter>C</Letter>
+							<Order>1</Order>
+							<PartitionID>1</PartitionID>
+							<Label>Windows 11</Label>
+						</ModifyPartition>
+					</ModifyPartitions>
+					<DiskID>0</DiskID>
+					<WillWipeDisk>true</WillWipeDisk>
+				</Disk>
+				<WillShowUI>OnError</WillShowUI>
+			</DiskConfiguration> -->
+			<ImageInstall>
+				<OSImage>
+					<InstallTo>
+						<DiskID>0</DiskID>
+						<!-- PartitionID 1 for DiskConfiguration and 3 for RunSyncronous -->
+						<PartitionID>3</PartitionID>
+					</InstallTo>
+					<WillShowUI>OnError</WillShowUI>
+					<!-- <InstallFrom>
+						<MetaData wcm:action="add">
+							<Key>/IMAGE/NAME</Key>
+							<Value>Windows 11 Pro Evaluation</Value>
+						</MetaData>
+					</InstallFrom> -->
+				</OSImage>
+			</ImageInstall>
+			<UserData>
+				<ProductKey>
+					<Key>VK7JG-NPHTM-C97JM-9MPGT-3V66T</Key>
+					<WillShowUI>Never</WillShowUI>
+				</ProductKey>
+				<AcceptEula>true</AcceptEula>
+				<!-- <FullName>admin</FullName>
+				<Organization>admin</Organization> -->
+			</UserData>
+			<RunSynchronous>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>1</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo SELECT DISK=0"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>2</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CLEAN"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>3</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CONVERT GPT"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>4</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CREATE PARTITION EFI SIZE=512"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>5</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo FORMAT QUICK FS=FAT32 LABEL="System""</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>6</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CREATE PARTITION MSR SIZE=16"</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>7</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo CREATE PARTITION PRIMARY"</Path>
+				</RunSynchronousCommand>
+				<!-- <RunSynchronousCommand wcm:action="add">
+					<Order>8</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo EXTEND"</Path>
+				</RunSynchronousCommand> -->
+				<RunSynchronousCommand wcm:action="add">
+					<Order>8</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.txt" echo FORMAT QUICK FS=NTFS LABEL="Windows""</Path>
+				</RunSynchronousCommand>
+				<RunSynchronousCommand wcm:action="add">
+					<Order>9</Order>
+					<Path>cmd.exe /c "&gt;&gt;"X:\diskpart.log" diskpart.exe /s "X:\diskpart.txt""</Path>
+				</RunSynchronousCommand>
+			</RunSynchronous>
+		</component>
 	</settings>
-	<!-- <settings pass="generalize"></settings> -->
+	<settings pass="generalize"/>
 	<settings pass="specialize">
 		<component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
 			<RunSynchronous>

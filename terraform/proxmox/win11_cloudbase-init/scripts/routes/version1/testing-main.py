@@ -46,7 +46,7 @@ def update_tfvars(output):
     vm_template_id = {name: int(id) for name, id in output.items()}
 
     # Read existing tfvars content
-    with open('win11_cloudbase-init2.auto.tfvars', 'r') as f:
+    with open('../win11_cloudbase-init2.auto.tfvars', 'r') as f:
         tfvars_content = f.readlines()
 
     # Find the start and end lines of the vm_template_id section
@@ -62,7 +62,7 @@ def update_tfvars(output):
     tfvars_content.insert(start_line + len(vm_template_id), '}\n')
 
     # Write updated content back to tfvars file
-    with open('win11_cloudbase-init2.auto.tfvars', 'w') as f:
+    with open('../win11_cloudbase-init2.auto.tfvars', 'w') as f:
         f.writelines(tfvars_content)
 
 def test_check_vm_template():

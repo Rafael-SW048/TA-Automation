@@ -5,11 +5,11 @@ iso_checksum = "sha256:C299F39A120EFAAEAFC4802C854CD67634643205D8272A4CF16B64927
 iso_virtio = "local:iso/virtio-win-0.1.248.iso"
 iso_virtio_checksum = "sha256:d5b5739cf297f0538d263e30678d5a09bba470a7c6bcbd8dff74e44153f16549"
 iso_autounattend = "local:iso/autounattend_win11_cloudbase-init.iso"
-iso_autounattend_checksum = "sha256:63949c3c092a5a75352f254bc68a465459c5a8f1911bad8ac15fb7675fc90ada"
+iso_autounattend_checksum = "sha256:0f174174b52d9eff92deccbd61e4f6cec1445a85f69a00fbde24832c15ca977e"
 vm_cpu_cores = "6"
 vm_memory = "8192"
 vm_disk_size = "512G"
-proxmox_vm_storage = "pve-ssd"
+proxmox_vm_storage = "local-lvm"
 vm_sockets = "1"
 os = "win11"
 

@@ -6,7 +6,7 @@ from routes.version1.user_vm_config import validate_and_fill_defaults, update_pc
 
 vms = Blueprint('vms', __name__, url_prefix='/vms')
 
-def create_response(message, code, status='success', details=None):
+def create_response(message, code, status='success', details=""):
     response = {status: {"code": code, "message": message}}
     if details:
         response[status]["details"] = details
@@ -20,7 +20,8 @@ def create_vm():
         if not vm_config:
             raise ValueError("Request data is not JSON")
         validated_config = {key: validate_and_fill_defaults(value) for key, value in vm_config.items()}
-        pci_updated_config = {key: update_pci_data(value) for key, value in validated_config.items()}
+        # pci_updated_config = {key: update_pci_data(value) for key, value in validated_config.items()}
+        pci_updated_config = update_pci_data(validated_config)
         add_vm_config(pci_updated_config)
         update_tfvars(pci_updated_config)
         return create_response('VM configuration added successfully', 200), 200
@@ -54,9 +55,6 @@ def check_vm_template():
         output = subprocess.check_output(command, shell=True)
         output = output.decode('utf-8')  # decode bytes to string
 
-        # Format the output as JSON array
-        json_output = '[{}]'.format(', '.join(output.splitlines()))
-
         # Split the output into lines
         lines = output.splitlines()
 
@@ -69,20 +67,15 @@ def check_vm_template():
                 json_objects.append('\n'.join(json_object))
                 json_object = []
 
-        # Call function to update tfvars file
-        print(output)
-        # update_tfvars(output)
-
         # Parse each JSON object separately and add it to a dictionary
-        output = {}
-        for json_object in json_objects:
-            try:
-                parsed_object = json.loads(json_object)
-                output[parsed_object['name']] = parsed_object['id']
-            except json.JSONDecodeError:
-                logging.error(f"Failed to parse JSON object: {json_object}")
-            except KeyError:
-                logging.error(f"JSON object does not have 'name' or 'id' field: {json_object}")
+        output = {json.loads(json_object)['name']: json.loads(json_object)['id'] for json_object in json_objects}
+
+        # Call function to update tfvars file
+        update_tfvars(output)
+
+        # Check if output is empty
+        if not output:
+            return create_response('No VM templates found', 200, details='No VM templates exist'), 200
 
         # Return only the names of the VM templates
         return create_response('VM templates retrieved successfully', 200, details=list(output.keys())), 200

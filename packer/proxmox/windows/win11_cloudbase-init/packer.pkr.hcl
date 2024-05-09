@@ -38,7 +38,9 @@ source "proxmox-iso" "win11-cloudbase-init" {
     cpu_type = "host"
     // machine = "q35"
     // scsi_controller = "virtio-scsi-single"
-    // bios = "ovmf"
+    bios = "ovmf"
+
+    boot = "order=sata4;ide2;sata0;net0;sata3;sata5"
 
     network_adapters {
             model = "e1000"
@@ -53,6 +55,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
         storage_pool = "${var.proxmox_vm_storage}"
         format = "raw"
         ssd = true
+        // io_thread = true
 	    cache_mode="writeback"
     }
 
@@ -77,9 +80,15 @@ source "proxmox-iso" "win11-cloudbase-init" {
         unmount = true
     }
 
-    boot_command = [
-        "<wait30><tab><wait><enter>"
-    ]
+    efi_config {
+        efi_storage_pool = "local-lvm"
+        pre_enrolled_keys = false
+        efi_type = "4m"
+    }
+
+    // boot_command = [
+    //     "<wait30><tab><wait><enter>"
+    // ]
 
     cloud_init = true
     cloud_init_storage_pool = "${var.proxmox_iso_storage}"

@@ -155,11 +155,13 @@
         },
         "cpu_type": {
           "type": "string",
-          "description": "Type of CPU to use (e.g., host)"
+          "description": "Type of CPU to use (e.g., host)",
+          "default": "host"
         },
         "clone": {
           "type": "string",
-          "description": "Name of a VM to clone configuration from"
+          "description": "Name of a VM to clone configuration from",
+          "default": "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"
         },
         "dns": {
           "type": "string",
@@ -175,7 +177,8 @@
         },
         "pci_device": {
           "type": "string",
-          "description": "Name of the PCI device to pass through to the VM"
+          "description": "Name of the PCI device to pass through to the VM",
+          "default": "GeForce RTX 4070 Ti"
         }
       }
     },    

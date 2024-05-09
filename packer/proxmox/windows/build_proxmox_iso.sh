@@ -2,50 +2,80 @@
 
 # This script is used to create ISO files for Proxmox, because Proxmox only accepts ISO files and not floppy disks.
 
-# Building an ISO for Windows 11 with cloudbase init
+# Function to check and download file
+check_and_download() {
+  local filename=$1
+  local url=$2
+  echo "[+] Check if $filename exists"
+  if [ ! -f "$script_dir/scripts/sysprep/app/$filename" ]; then
+    # If it doesn't exist, download it
+    echo "[-] $filename not found"
+    echo "[+] Downloading $filename"
+    wget "$url" -P "$script_dir/scripts/sysprep/app/" && echo "[+] Downloading $filename done"
+  else
+    echo "[+] $filename exist"
+  fi
+}
+
+# Function to create ISO
+create_iso() {
+  local iso_name=$1
+  local iso_dir=$2
+  local iso_source=$3
+  local iso_label=$4
+  local pkvars_file=$5
+  echo "[+] Building ISO $iso_name"
+  # Check if the ISO file already exists
+  echo "[+] Checking if $iso_name already exists"
+  if [ -f "$iso_dir/$iso_name" ]; then
+    echo "[-] $iso_name already exists"
+    if [ -z "$replace_choice" ]; then
+      read -p "Do you want to replace the existing $iso_name with a new one? (y/n): " replace_choice
+    fi
+    replace_choice=$(echo $replace_choice | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
+    if [ "$replace_choice" == "y" ] || [ "$replace_choice" == "yes" ]; then
+      # Create a temporary ISO file
+      echo "[+] Creating temporary ISO file"
+      mkisofs -J -l -R -V "$iso_label CD" -iso-level 4 -o "$iso_dir/temp.iso" "$iso_source"
+      # Calculate the checksum of the temporary ISO file
+      echo "[+] Calculating checksum of the temporary ISO file"
+      sha_temp=$(sha256sum "$iso_dir/temp.iso" | cut -d ' ' -f1)
+      # Replace the existing ISO with the new one
+      echo "[+] Replacing the existing $iso_name with the new one"
+      mv "$iso_dir/temp.iso" "$iso_dir/$iso_name"
+      echo "[+] Updating $pkvars_file"
+      sed -i "/iso_autounattend_checksum =/s/\"sha256:.*\"/\"sha256:$sha_temp\"/g" "$pkvars_file"
+    else
+      echo "[+] Keeping the existing $iso_name"
+    fi
+  else
+    echo "[+] $iso_name does not exist"
+    mkisofs -J -l -R -V "$iso_label CD" -iso-level 4 -o "$iso_dir/$iso_name" "$iso_dir/iso"
+    sha_iso=$(sha256sum "$iso_dir/$iso_name" | cut -d ' ' -f1)
+    # Update the SHA-256 checksum in the packer variable file
+    echo "[+] Updating $pkvars_file"
+    sed -i "/iso_autounattend_checksum =/s/\"sha256:.*\"/\"sha256:$sha_iso\"/g" "$pkvars_file"
+  fi
+}
 
 # Get the directory of the script
 script_dir=$(dirname "$0")
 
 # Get the user input from the command line
-replace_choice1=$1
-replace_choice2=$replace_choice1
+replace_choice=$1
 
 echo "----------------------------------------"
 
-# mkisofs is a utility that creates an ISO 9660 image from files on disk
-echo "[+] Build iso windows 11 with cloudbase init"
-# Check if the ISO file already exists
-echo "[+] Checking if autounattend ISO file already exists"
-if [ -f /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso ]; then
-  echo "[-] Autounattend ISO file already exists"
-  if [ -z "$replace_choice1" ]; then
-    read -p "Do you want to replace the existing autounattend ISO with a new one? (y/n): " replace_choice1
-  fi
-  replace_choice1=$(echo $replace_choice1 | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
-  if [ "$replace_choice1" == "y" ] || [ "$replace_choice1" == "yes" ]; then
-    # Create a temporary ISO file
-    echo "[+] Creating temporary autounattend ISO file"
-    mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o /var/lib/vz/template/iso/temp.iso $script_dir/iso/win11_cloudbase-init
-    # Calculate the checksum of the temporary ISO file
-    echo "[+] Calculating checksum of the temporary autounattend ISO file"
-    sha_temp=$(sha256sum /var/lib/vz/template/iso/temp.iso | cut -d ' ' -f1)
-    # Replace the existing ISO with the new one
-    echo "[+] Replacing the existing autounattend ISO with the new one"
-    mv /var/lib/vz/template/iso/temp.iso /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso
-    echo "[+] Updating win11_cloudbase-init.pkvars.hcl"
-    sed -i "/iso_autounattend_checksum =/s/\"sha256:.*\"/\"sha256:$sha_temp\"/g" $script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl
-  else
-    echo "[+] Keeping the existing autounattend ISO"
-  fi
-else
-  echo "[+] ISO file does not exist"
-  mkisofs -J -l -R -V "autounatend CD" -iso-level 4 -o /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso $script_dir/iso/win11_cloudbase-init
-  sha_autounattend_win11_cloudbaseInit=$(sha256sum /var/lib/vz/template/iso/autounattend_win11_cloudbase-init.iso|cut -d ' ' -f1)
-  # Update the SHA-256 checksum in the packer variable file
-  echo "[+] Updating win11_cloudbase-init.pkvars.hcl"
-  sed -i "/iso_autounattend_checksum =/s/\"sha256:.*\"/\"sha256:$sha_autounattend_win11_cloudbaseInit\"/g" $script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl
-fi
+# Check and download additional files
+check_and_download "SteamSetup.exe" "https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe"
+check_and_download "ZeroTier One.msi" "https://download.zerotier.com/dist/ZeroTier%20One.msi?_gl=1*1snqeb8*_up*MQ..*_ga*MTYxNDY0ODg4MC4xNzE1MjM2Njc5*_ga_6TEJNMZS6N*MTcxNTIzNjY3Ni4xLjAuMTcxNTIzNjY3Ni4wLjAuMA..*_ga_NX38HPVY1Z*MTcxNTIzNjY3Ni4xLjAuMTcxNTIzNjY3Ni4wLjAuMA.."
+check_and_download "Cloudflare_WARP_2024.3.409.0.msi" "https://1111-releases.cloudflareclient.com/windows/Cloudflare_WARP_Release-x64.msi"
+check_and_download "552.22-desktop-win10-win11-64bit-international-dch-whql.exe" "https://us.download.nvidia.com/Windows/552.22/552.22-desktop-win10-win11-64bit-international-dch-whql.exe"
+
+echo "----------------------------------------"
+
+# Build ISO for Windows 11 with cloudbase init
+create_iso "autounattend_win11_cloudbase-init.iso" "/var/lib/vz/template/iso" "$script_dir/iso/win11_cloudbase-init" "autounatend CD" "$script_dir/win11_cloudbase-init/win11_cloudbase-init.pkvars.hcl"
 
 echo "----------------------------------------"
 
@@ -62,39 +92,13 @@ fi
 
 echo "----------------------------------------"
 
-# Building an ISO for scripts
-echo "[+] Build iso for scripts"
-# Check if the scripts_cloudbase-init.iso already exists
-echo "[+] Checking if scripts_cloudbase-init.iso already exists"
-if [ -f /var/lib/vz/template/iso/scripts_cloudbase-init.iso ]; then
-  echo "[-] scripts_cloudbase-init.iso already exists"
-  if [ -z "$replace_choice2" ]; then
-    read -p "Do you want to replace the existing scripts ISO with a new one? (y/n): " replace_choice2
-  fi
-  replace_choice2=$(echo $replace_choice2 | tr '[:upper:]' '[:lower:]')  # Convert to lowercase
-  if [ "$replace_choice2" == "y" ] || [ "$replace_choice2" == "yes" ]; then
-    # Create a temporary ISO file for comparison
-    echo "[+] Creating temporary ISO file"
-    mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o /var/lib/vz/template/iso/temp.iso $script_dir/scripts
-    # Calculate the checksum of the temporary ISO file
-    echo "[+] Calculating checksum of the temporary ISO file"
-    sha_temp=$(sha256sum /var/lib/vz/template/iso/temp.iso | cut -d ' ' -f1)
-    # Replace the existing ISO with the new one
-    echo "[+] Replacing the existing scripts ISO with the new one"
-    mv /var/lib/vz/template/iso/temp.iso /var/lib/vz/template/iso/scripts_cloudbase-init.iso
-    echo "[+] Updating scripts.pkvars.hcl"
-    sed -i "/iso_scripts_checksum =/s/\"sha256:.*\"/\"sha256:$sha_temp\"/g" $script_dir/scripts.pkvars.hcl
-  else
-    echo "[+] Keeping the existing scripts ISO"
-  fi
-else
-  echo "[+] scripts_cloudbase-init.iso does not exist"
-  mkisofs -J -l -R -V "scripts CD" -iso-level 4 -o /var/lib/vz/template/iso/scripts_cloudbase-init.iso $script_dir/scripts
-  sha_scripts_cloudbaseInit=$(sha256sum /var/lib/vz/template/iso/scripts_cloudbase-init.iso|cut -d ' ' -f1)
-  # Update the SHA-256 checksum in the packer variable file
-  echo "[+] Updating scripts.pkvars.hcl"
-  sed -i "/iso_scripts_checksum =/s/\"sha256:.*\"/\"sha256:$sha_scripts_cloudbaseInit\"/g" $script_dir/scripts.pkvars.hcl
-fi
+# Build ISO for scripts
+  local iso_name=$1
+  local iso_dir=$2
+  local iso_source=$3
+  local iso_label=$4
+  local pkvars_file=$5
+create_iso "scripts_cloudbase-init.iso" "/var/lib/vz/template/iso" "$script_dir/scripts" "scripts CD" "$script_dir/scripts.pkvars.hcl"
 
 echo "----------------------------------------"
 

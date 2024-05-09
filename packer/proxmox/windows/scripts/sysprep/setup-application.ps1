@@ -151,7 +151,7 @@ try {
 
 	echo "Editing C:\IddSampleDriver\option.txt..."
 	$content = Get-Content -Path "C:\IddSampleDriver\option.txt"
-	$content[0] = "2"
+	$content[0] = "1"
 	$content | Set-Content -Path "C:\IddSampleDriver\option.txt"
 	echo "Done"
 

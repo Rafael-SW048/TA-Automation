@@ -1,6 +1,6 @@
 import hcl
 import os
-from validate_vga import assign_pci_to_vm  # Import the assign_pci_to_vm function from VGA.py
+from routes.version1.validate_vga import assign_pci_to_vm  # Import the assign_pci_to_vm function from VGA.py
 
 def update_pci_data(json_data):
     for vm_sid, vm_info in json_data.items():
@@ -25,7 +25,7 @@ def validate_and_fill_defaults(vm_config):
         "cores": 6,
         "cpu_type": "host",
         "memory": 8192,
-        "clone": "VM 101",
+        "clone": "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep",
         "dns": "",
         "ip": "",
         "gateway": "",
@@ -67,7 +67,7 @@ def save_hcl_config(data, path):
 
 def get_config_path():
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    parent_dir = os.path.dirname(dir_path)
+    parent_dir = os.path.dirname(os.path.dirname(os.path.dirname(dir_path)))
     return os.path.join(parent_dir, 'vms_config.auto.tfvars')
 
 def add_vm_config(vm_config):
@@ -105,7 +105,7 @@ def update_tfvars(vm_templates):
     vm_template_id = {name: int(id) for name, id in vm_templates.items()}
 
     # Read existing tfvars content
-    with open('win11_cloudbase-init2.auto.tfvars', 'r') as f:
+    with open('../win11_cloudbase-init.auto.tfvars', 'r') as f:
         tfvars_content = f.readlines()
 
     # Find the start and end lines of the vm_template_id section
@@ -121,5 +121,5 @@ def update_tfvars(vm_templates):
     tfvars_content.insert(start_line + len(vm_template_id), '}\n')
 
     # Write updated content back to tfvars file
-    with open('win11_cloudbase-init2.auto.tfvars', 'w') as f:
+    with open('../win11_cloudbase-init.auto.tfvars', 'w') as f:
         f.writelines(tfvars_content)
