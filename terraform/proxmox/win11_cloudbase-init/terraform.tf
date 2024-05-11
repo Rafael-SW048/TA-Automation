@@ -113,20 +113,7 @@ resource "null_resource" "remote_exec" {
   provisioner "remote-exec" {
     when = create
     inline = [
-      "echo 'Connected to VM with index:', ${each.key}",  # Use each.key for index type
-      # Utilize var.vms_config[each.value] to access information like CPU cores
-      "echo 'VM Cores:', ${var.vms_config[each.value].SID}",
-      # Execute the PowerShell script
-      "powershell -Command \""
-        + "$currentName = $env:computername; "
-        + "$newName = '${var.vms_config[each.value].SID}'; "  # Use SID as the new name
-        + "if ($newName -eq '') { Write-Host 'Error: Please enter a new computer name.'; exit 1 }; "
-        + "Try { Rename-Computer -NewName $newName -Force; Write-Host 'Successfully renamed the computer to ''$newName''.' } "
-        + "Catch { Write-Error 'Failed to rename the computer: $($_.Exception.Message)'; exit 1 }; "
-        + "Write-Host 'The computer name change will take effect after a restart.'; "
-        + "Read-Host 'Press Enter to restart now, or any other key to cancel.'; "
-        + "if ($PSCurrentPipelineStatus.IsCompleted) { Restart-Computer -Force }"
-        + "\""
+      "powershell.exe -File ${path.module}/rename_computer.ps1 -newName ${var.vms_config[each.value].SID}"
     ]
   }
 }
