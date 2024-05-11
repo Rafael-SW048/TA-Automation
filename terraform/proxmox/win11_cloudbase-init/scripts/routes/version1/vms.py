@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify, Blueprint
 import subprocess, json
 import logging
 from routes.version1.user_vm_config import validate_and_fill_defaults, update_pci_data, add_vm_config, delete_vm_config, update_tfvars
+from routes.version1.run_vm_creation import update_terraform_state
 
 
 vms = Blueprint('vms', __name__, url_prefix='/vms')
@@ -24,6 +25,7 @@ def create_vm():
         pci_updated_config = update_pci_data(validated_config)
         add_vm_config(pci_updated_config)
         update_tfvars(pci_updated_config)
+        update_terraform_state()
         return create_response('VM configuration added successfully', 200), 200
     except KeyError as e:
         logging.error("Missing key in VM configuration", exc_info=True)
@@ -40,6 +42,7 @@ def delete_vm(vm_sid):
     try:
         delete_vm_config(vm_sid)
         update_tfvars({})
+        update_terraform_state()
         return create_response('VM configuration deleted successfully', 200), 200
     except KeyError as e:
         logging.error("No VM with SID found", exc_info=True)
