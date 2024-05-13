@@ -109,28 +109,28 @@ build {
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
-        pause_before      = "180s"
+        pause_before      = "120s"
         scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p1.ps1"]
     }
 
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
-        pause_before      = "30s"
+        pause_before      = "5s"
         scripts           = ["${path.root}/../scripts/sysprep/win-activation.ps1"]
     }
 
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
-        pause_before      = "30s"
+        pause_before      = "5s"
         scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
     }
 
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
-        pause_before      = "30s"
+        pause_before      = "5s"
         scripts           = ["${path.root}/../scripts/sysprep/setup-application.ps1"]
     }
 }

@@ -1,10 +1,11 @@
 vm_full_clone = false
 
 vm_template_id = {
+  "Win11x64-VM-template-cloudbaseInit-ovmf-autorun-jordan-scripts" = 103,
   "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep" = 100,
 }
 
-storage = "pve-ssd"
+storage = "pve"
 
 network_bridge = "vmbr0"
 

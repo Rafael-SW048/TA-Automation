@@ -1,5 +1,5 @@
 try {
-  Start-Sleep 120
+  Start-Sleep 5
   # install Cloudbase-Init
   echo "Create setup directory"
   mkdir "c:\setup" -ErrorAction Stop

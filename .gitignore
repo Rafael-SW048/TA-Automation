@@ -31,6 +31,8 @@ credentials.json
 *.iso
 *.msi
 *.exe
+10.11.1.*.*
+*.plan
 
 # Ignore test, temp, and note file
 test.*

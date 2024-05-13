@@ -23,7 +23,11 @@ app.register_blueprint(v1_route)
 def v1_redirect():
     return redirect(SWAGGER_URL_V1)
 
-versions = [name for name in os.listdir('routes') if os.path.isdir(os.path.join('routes', name))]
+try:
+    versions = [name for name in os.listdir('scripts/routes') if os.path.isdir(os.path.join('scripts/routes', name))]
+except FileNotFoundError:
+    print("The 'routes' directory does not exist. Please create it and try again.")
+    sys.exit(1)
 
 @app.route('/')
 def home():

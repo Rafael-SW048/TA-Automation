@@ -27,7 +27,7 @@ provider "proxmox" {
     insecure = var.proxmox_skip_tls_verify
 }
 
-resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
+resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
   for_each = var.vms_config
 
   node_name   = var.proxmox_node
@@ -60,7 +60,6 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
   }
 
   clone {
-      # datastore_id = var.storage
       node_name = var.proxmox_node
       vm_id = lookup(var.vm_template_id, each.value.clone, -1)
       full  = var.vm_full_clone
@@ -77,8 +76,17 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
     model   = var.network_model
   }
 
+  audio_device {
+    device = "ich9-intel-hda"
+  }
+
+  vga {
+    memory = 256
+    type = "virtio"
+  }
+
   initialization {
-    datastore_id = var.storage
+    # datastore_id = var.storage
     # dns {
     #   servers = [each.value.dns]
     # }
@@ -91,94 +99,31 @@ resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
   }
 
   provisioner "local-exec" {
-    command = "./scripts/test.sh ${self.vm_id}"
+    command = "./scripts/vm_ip-address_checker.sh ${self.vm_id} ${each.value.SID}"
     when    = create
   }
+
+  
+
 }
 
-resource "null_resource" "remote_exec" {
-  depends_on = [proxmox_virtual_environment_vm.win11-cloudbase-init]
+# resource "null_resource" "remote_exec" {
+#   depends_on = [proxmox_virtual_environment_vm.win11_cloudbase-init]
 
-  for_each = keys(var.vms_config)
+#   for_each = var.vms_config
 
-  connection {
-    type     = "winrm"
-    user     = "admin"
-    password = "admin"
-    # host     = "${chomp(file("ip_address_${each.value.vm_id}.txt"))}"
-    host = "${chomp(file(format("ip_address_%s.txt", var.vms_config[each.value].vm_id)))}"
-    timeout  = "5m"
-  }
-
-  provisioner "remote-exec" {
-    when = create
-    inline = [
-      "powershell.exe -File ${path.module}/rename_computer.ps1 -newName ${var.vms_config[each.value].SID}"
-    ]
-  }
-}
-
-
-
-# resource "proxmox_virtual_environment_vm" "win11-cloudbase-init" {
-#   node_name   = var.proxmox_node
-#   pool_id     = var.proxmox_pool
-
-#   name = var.vm_config.name
-#   description = var.vm_config.desc
-
-#   operating_system {
-#     type = "win11"
+#   connection {
+#     type     = "winrm"
+#     user     = "admin"
+#     password = "admin"
+#     host     = file("${path.module}/vm_ip-address/ip-address_${each.value.SID}.txt")
+#     # timeout  = "5m"
 #   }
 
-#   cpu {
-#     cores   = var.vm_config.cores
-#     sockets = 1
-#     type = "host"
-#   }
-
-#   memory {
-#     dedicated = var.vm_config.memory
-#   }
-
-#   clone {
-#       # datastore_id = var.storage
-#       node_name = var.proxmox_node
-#       vm_id = lookup(var.vm_template_id, var.vm_config.clone, -1)
-#       full  = var.vm_full_clone
-#       retries = 2
-#   }
-
-#   agent {
-#     # read 'Qemu guest agent' section, change to true only when ready
-#     enabled = true
-#   }
-
-#   network_device {
-#     bridge  = var.network_bridge
-#     model   = var.network_model
-#   }
-
-#   lifecycle {
-#     ignore_changes = [
-#       vga,
+#   provisioner "remote-exec" {
+#     # when = create
+#     inline = [
+#       "powershell.exe -File ${path.module}/rename_computer.ps1 -newName ${each.value.SID}"
 #     ]
 #   }
-
-#   initialization {
-#     datastore_id = var.storage
-#   #   dns {
-#   #     servers = [
-#   #       var.vm_config.dns
-#   #     ]
-#   #   }
-#   #   ip_config {
-#   #     ipv4 {
-#   #       address = var.vm_config.ip
-#   #       gateway = var.vm_config.gateway
-#   #     }
-#   #   }
-#   }
 # }
-
-

@@ -11,3 +11,4 @@ Catch { Write-Error 'Failed to rename the computer: $($_.Exception.Message)'; ex
 Write-Host 'The computer name change will take effect after a restart.'
 Read-Host 'Press Enter to restart now, or any other key to cancel.'
 if ($PSCurrentPipelineStatus.IsCompleted) { Restart-Computer -Force }
+"powershell.exe -File C:/setup/scripts/ZeroTierAuto/vm/runApp.ps1"

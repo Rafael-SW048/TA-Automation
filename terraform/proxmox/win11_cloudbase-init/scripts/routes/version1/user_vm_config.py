@@ -25,7 +25,7 @@ def validate_and_fill_defaults(vm_config):
         "cores": 6,
         "cpu_type": "host",
         "memory": 8192,
-        "clone": "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep",
+        "clone": "Win11x64-VM-template-cloudbaseInit-ovmf-autorun-jordan-scripts",
         "dns": "",
         "ip": "",
         "gateway": "",
@@ -56,7 +56,7 @@ def save_hcl_config(data, path):
     with open(path, 'w') as f:
         f.write('vms_config = {\n')
         for vm, config in data['vms_config'].items():
-            f.write(f'  {vm} = {{\n')
+            f.write(f'  "{vm}" = {{\n')
             for key, value in config.items():
                 if isinstance(value, str):
                     f.write(f'    {key} = "{value}"\n')
@@ -102,10 +102,11 @@ def delete_vm_config(vm_sid):
 
 def update_tfvars(vm_templates):
     # Create a dictionary where the keys are the 'name' values and the values are the 'id' values
+    print(vm_templates)
     vm_template_id = {name: int(id) for name, id in vm_templates.items()}
 
     # Read existing tfvars content
-    with open('../win11_cloudbase-init.auto.tfvars', 'r') as f:
+    with open('win11_cloudbase-init.auto.tfvars', 'r') as f:
         tfvars_content = f.readlines()
 
     # Find the start and end lines of the vm_template_id section
@@ -121,5 +122,5 @@ def update_tfvars(vm_templates):
     tfvars_content.insert(start_line + len(vm_template_id), '}\n')
 
     # Write updated content back to tfvars file
-    with open('../win11_cloudbase-init.auto.tfvars', 'w') as f:
+    with open('win11_cloudbase-init.auto.tfvars', 'w') as f:
         f.writelines(tfvars_content)

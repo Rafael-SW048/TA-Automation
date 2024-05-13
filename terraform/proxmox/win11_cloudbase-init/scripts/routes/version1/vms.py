@@ -3,6 +3,7 @@ import subprocess, json
 import logging
 from routes.version1.user_vm_config import validate_and_fill_defaults, update_pci_data, add_vm_config, delete_vm_config, update_tfvars
 from routes.version1.run_vm_creation import update_terraform_state
+import threading
 
 
 vms = Blueprint('vms', __name__, url_prefix='/vms')
@@ -10,7 +11,7 @@ vms = Blueprint('vms', __name__, url_prefix='/vms')
 def create_response(message, code, status='success', details=""):
     response = {status: {"code": code, "message": message}}
     if details:
-        response[status]["details"] = details
+        response["details"] = details
     return jsonify(response)
 
 app = Flask(__name__)
@@ -20,12 +21,15 @@ def create_vm():
         vm_config = request.get_json()
         if not vm_config:
             raise ValueError("Request data is not JSON")
+        vm_config = {"vm-" + vm_config["SID"]: vm_config}
         validated_config = {key: validate_and_fill_defaults(value) for key, value in vm_config.items()}
         # pci_updated_config = {key: update_pci_data(value) for key, value in validated_config.items()}
         pci_updated_config = update_pci_data(validated_config)
         add_vm_config(pci_updated_config)
-        update_tfvars(pci_updated_config)
-        update_terraform_state()
+
+        # Create a new thread to run update_terraform_state
+        thread = threading.Thread(target=update_terraform_state)
+        thread.start()
         return create_response('VM configuration added successfully', 200), 200
     except KeyError as e:
         logging.error("Missing key in VM configuration", exc_info=True)
@@ -41,8 +45,10 @@ def create_vm():
 def delete_vm(vm_sid):
     try:
         delete_vm_config(vm_sid)
-        update_tfvars({})
-        update_terraform_state()
+        
+        # Create a new thread to run update_terraform_state
+        thread = threading.Thread(target=update_terraform_state)
+        thread.start()
         return create_response('VM configuration deleted successfully', 200), 200
     except KeyError as e:
         logging.error("No VM with SID found", exc_info=True)

@@ -1,13 +1,12 @@
 # Credentials and configuration for the Proxmox provider
 variable "proxmox_api_url" {
   type = string
-  default = "https://0.0.0.0:8006/"
+  default = "https://0.0.0.0:8006/api2/json"
 }
 
 variable "proxmox_api_token_id" {
   type = string
   sensitive = true
-  # default = "root@pam"
 }
 
 variable "proxmox_api_token_password" {
@@ -53,7 +52,8 @@ variable "vm_template_id" {
 
   # set the ids according to your templates
   default = {
-      "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"  = 105
+    Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep-ovmf = 104,
+    Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep = 100
   }
 }
 
@@ -80,7 +80,7 @@ variable "vms_config" {
       cores       = 6
       cpu_type    = "host"
       memory      = 8192
-      clone       = "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"
+      clone       = "Win11x64-VM-template-cloudbaseInit-ovmf-autorun-jordan-scripts"
       dns         = "192.168.10.1" # Placeholder
       ip          = "192.168.10.10/24" # Placeholder
       gateway     = "192.168.10.1" # Placeholder

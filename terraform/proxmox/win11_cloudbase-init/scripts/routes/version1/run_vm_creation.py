@@ -2,8 +2,8 @@ import subprocess
 import os
 import sys
 
-def run_command(command):
-    process = subprocess.Popen(command, stdout=subprocess.PIPE, text=True)
+def run_command(command, directory):
+    process = subprocess.Popen(command, stdout=subprocess.PIPE, text=True, cwd=directory)
     while True:
         output = process.stdout.readline()
         print(output.strip())
@@ -17,12 +17,14 @@ def run_command(command):
 def update_terraform_state():
     try:
         # Run the user_vm_config.py script
-        run_command(["python3", "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init/scripts/user_vm_config.py"])
+        # run_command(["python3", "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init/scripts/user_vm_config.py"])
 
         # Run the Terraform commands
-        run_command(["terraform", "validate"])
-        run_command(["terraform", "apply", "-auto-approve", "--var-file=../credentials.tfvars"])
+        run_command(["terraform", "init"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
+        run_command(["terraform", "validate"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
+        run_command(["terraform", "plan", "-out=tf.plan", "--var-file=/root/TA-Automation/terraform/proxmox/credentials.tfvars"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
+        run_command(["terraform", "apply", "-auto-approve", "tf.plan"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
 
-        os.remove("test.plan")
+        # os.remove("tf.plan")
     except KeyboardInterrupt:
         print("Script interrupted. Exiting.")

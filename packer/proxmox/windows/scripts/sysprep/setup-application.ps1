@@ -19,15 +19,17 @@ try {
 	# Check installation status
 	if ($exitCode.ExitCode -eq 0) {
 		Write-Host "CloudFlare Installation successful!"
+		"CloudFlare Installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	} else {
 		Write-Host "CloudFlare Installation failed with exit code: $($exitCode.ExitCode)"
+		"CloudFlare Installation failed with exit code: $($exitCode.ExitCode)" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 
 	Start-Sleep 5
 	echo "------------------------------------------------"
-        echo "Copy ZeroTier One.msi"
-        copy-item "G:\sysprep\app\ZeroTier One.msi" "c:\setup\app\ZeroTier One.msi" -force -ErrorAction Stop
-        echo "Done"
+	echo "Copy ZeroTier One.msi"
+	copy-item "G:\sysprep\app\ZeroTier One.msi" "c:\setup\app\ZeroTier One.msi" -force -ErrorAction Stop
+	echo "Done"
 
 	echo "Installing ZeroTier..."
 	
@@ -36,15 +38,17 @@ try {
 
 	if ($exitCode.ExitCode -eq 0) {
 		Write-Host "ZeroTier Installation successful!"
+		"ZeroTier Installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	} else {
 		Write-Host "ZeroTier Installation failed with exit code: $($exitCode.ExitCode)"
+		"ZeroTier Installation failed with exit code: $($exitCode.ExitCode)" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 
 	Start-Sleep 5
 	echo "------------------------------------------------"
-        echo "Copy SteamSetup.exe"
-        copy-item "G:\sysprep\app\SteamSetup.exe" "c:\setup\app\SteamSetup.exe" -force -ErrorAction Stop
-        echo "Done"
+	echo "Copy SteamSetup.exe"
+	copy-item "G:\sysprep\app\SteamSetup.exe" "c:\setup\app\SteamSetup.exe" -force -ErrorAction Stop
+	echo "Done"
 
 	echo "Installing Steam..."
 	
@@ -55,15 +59,17 @@ try {
 
 	if ($exitCode.ExitCode -eq 0) {
 		Write-Host "Steam Installation successful!"
+		"Steam Installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	} else {
 		Write-Host "Steam Installation failed with exit code: $($exitCode.ExitCode)"
+		"Steam Installation failed with exit code: $($exitCode.ExitCode)" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 
 	Start-Sleep 5
 	echo "------------------------------------------------"
-        echo "Copy sunshine-windows-installer.exe"
-        copy-item "G:\sysprep\app\sunshine-windows-installer.exe" "c:\setup\app\sunshine-windows-installer.exe" -force -ErrorAction Stop
-        echo "Done"
+	echo "Copy sunshine-windows-installer.exe"
+	copy-item "G:\sysprep\app\sunshine-windows-installer.exe" "c:\setup\app\sunshine-windows-installer.exe" -force -ErrorAction Stop
+	echo "Done"
 
 	echo "Installing Sunshine..."
 	
@@ -73,8 +79,10 @@ try {
 
 	if ($exitCode.ExitCode -eq 0) {
 		Write-Host "Sunshine Installation successful!"
+		"Sunshine Installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	} else {
 		Write-Host "Sunshine Installation failed with exit code: $($exitCode.ExitCode)"
+		"Sunshine Installation failed with exit code: $($exitCode.ExitCode)" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 	
 	Start-Sleep 5
@@ -119,11 +127,14 @@ try {
 			& 'c:\setup\app\install.ps1' -RunAsAdmin | Out-Null
 			if ($LASTEXITCODE -eq 0) {
 					echo "Scoop installation successful!"
+					"Scoop installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 			} else {
 					throw "Scoop installation failed with exit code: $LASTEXITCODE"
+					"Scoop installation failed with exit code: $LASTEXITCODE" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 			}
 	} catch {
 			echo "Scoop installation failed with error: $_"
+			"Scoop installation failed with error: $_" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 	echo "------------------------------------------------"
 
@@ -131,20 +142,24 @@ try {
 	try {
 			scoop install git
 			echo "Git installation successful!"
+			"Git installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	} catch {
 			echo "Git installation failed with error: $_"
+			"Git installation failed with error: $_" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 
 	echo "------------------------------------------------"
 
 	echo "Installing IddSampleDriver..."
 	try {
-	    scoop bucket add extras
-	    scoop bucket add nonportable
-	    scoop install iddsampledriver-ge9-np -g
-	    echo "IddSampleDriver installation successful!"
+		scoop bucket add extras
+		scoop bucket add nonportable
+		scoop install iddsampledriver-ge9-np -g
+		echo "IddSampleDriver installation successful!"
+		"IddSampleDriver installation successful!" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	} catch {
-	    echo "IddSampleDriver installation failed with error: $_"
+		echo "IddSampleDriver installation failed with error: $_"
+		"IddSampleDriver installation failed with error: $_" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 	}
 
 	echo "------------------------------------------------"
@@ -166,10 +181,23 @@ try {
 	echo "------------------------------------------------"
 
 	echo "Cloning network configuration dependencies..."
+	# Cloning network configuration dependencies
 	git clone https://github.com/JordanSihombing/ZeroTierAuto.git "C:\setup\scripts\ZeroTierAuto"
+	
+
+	# Set script to start at startup
+	echo "Setting script to start at startup..."
+	$scriptPath = "C:\setup\scripts\ZeroTierAuto\controller\vmStart.ps1"
+	$shortcutPath = "$([System.Environment]::GetFolderPath('Startup'))\vmStart.lnk"
+	$WshShell = New-Object -ComObject WScript.Shell
+	$Shortcut = $WshShell.CreateShortcut($shortcutPath)
+	$Shortcut.TargetPath = "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+	$Shortcut.Arguments = "-ExecutionPolicy Bypass -File `"$scriptPath`""
+	$Shortcut.Save()
 	echo "Done"
 
 } catch {
 	Write-Output "This is the error...  Error Details: $($_.Exception.Message)"
 	echo "------------------------------------------------"
+	"This is the error...  Error Details: $($_.Exception.Message)" | Out-File -Append -FilePath "C:\setup\app\installation.log"
 }
