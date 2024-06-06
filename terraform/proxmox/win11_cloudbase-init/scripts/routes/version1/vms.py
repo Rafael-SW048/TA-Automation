@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify, Blueprint
-import subprocess, json
+from flask import Flask, request, jsonify, Blueprint, json
 import logging
-from routes.version1.user_vm_config import validate_and_fill_defaults, update_pci_data, add_vm_config, delete_vm_config, update_tfvars
-from routes.version1.run_vm_creation import update_terraform_state
-import threading
-
+from routes.version1.user_vm_config import validate_and_fill_defaults, update_pci_data, add_vm_config, delete_vm_config, update_tfvars, get_config_path, load_hcl_config
+from routes.version1.run_vm_creation import handle_request
+# from routes.version1.run_vm_creation_v2 import handle_request
+import subprocess
+import requests
 
 vms = Blueprint('vms', __name__, url_prefix='/vms')
 
@@ -14,6 +14,8 @@ def create_response(message, code, status='success', details=""):
         response["details"] = details
     return jsonify(response)
 
+
+
 app = Flask(__name__)
 @vms.route('/', methods=['POST'])
 def create_vm():
@@ -21,15 +23,26 @@ def create_vm():
         vm_config = request.get_json()
         if not vm_config:
             raise ValueError("Request data is not JSON")
+        print("got a request", vm_config)
+        sid = vm_config["SID"]
         vm_config = {"vm-" + vm_config["SID"]: vm_config}
+        print("formated data", vm_config)
         validated_config = {key: validate_and_fill_defaults(value) for key, value in vm_config.items()}
-        # pci_updated_config = {key: update_pci_data(value) for key, value in validated_config.items()}
+        print("validated: ", validated_config)
+        # Brute Force Cluster. Need Improvement
+        if validated_config["vm-" + sid]["node"] != "pve":
+            # Forward the request to another node
+            other_node_url = "http://other_node_url"  # Replace with the URL of your other node
+            response = requests.post(other_node_url, json=vm_config)
+            return response.content, response.status_code
         pci_updated_config = update_pci_data(validated_config)
+        print("pci updated: ", pci_updated_config)
         add_vm_config(pci_updated_config)
 
-        # Create a new thread to run update_terraform_state
-        thread = threading.Thread(target=update_terraform_state)
-        thread.start()
+        # Handle the request
+        # handle_request(vm_config)
+        handle_request({"action": "create", "sid": sid})
+
         return create_response('VM configuration added successfully', 200), 200
     except KeyError as e:
         logging.error("Missing key in VM configuration", exc_info=True)
@@ -44,11 +57,17 @@ def create_vm():
 @vms.route('/<vm_sid>', methods=['DELETE'])
 def delete_vm(vm_sid):
     try:
-        delete_vm_config(vm_sid)
+        # Brute Force Cluster. Need Improvement
+        hcl_config = load_hcl_config(get_config_path())
+        if hcl_config["vm-" + vm_sid]["node"] != "pve":
+            other_node_url = "http://other_node_url"
+            response = requests.delete(f"{other_node_url}/{vm_sid}")
+            return response.content, response.status_code
         
-        # Create a new thread to run update_terraform_state
-        thread = threading.Thread(target=update_terraform_state)
-        thread.start()
+        # Handle the request
+        # handle_request(vm_sid)
+        handle_request({"action": "create", "sid": vm_sid})
+
         return create_response('VM configuration deleted successfully', 200), 200
     except KeyError as e:
         logging.error("No VM with SID found", exc_info=True)

@@ -7,11 +7,11 @@ check_and_download() {
   local filename=$1
   local url=$2
   echo "[+] Check if $filename exists"
-  if [ ! -f "$script_dir/scripts/sysprep/app/$filename" ]; then
+  if [ ! -f "$script_dir/scripts/sysprep/apps/$filename" ]; then
     # If it doesn't exist, download it
     echo "[-] $filename not found"
     echo "[+] Downloading $filename"
-    wget "$url" -P "$script_dir/scripts/sysprep/app/" && echo "[+] Downloading $filename done"
+    wget "$url" -P "$script_dir/scripts/sysprep/apps/" && echo "[+] Downloading $filename done"
   else
     echo "[+] $filename exist"
   fi
@@ -70,7 +70,7 @@ echo "----------------------------------------"
 check_and_download "SteamSetup.exe" "https://cdn.cloudflare.steamstatic.com/client/installer/SteamSetup.exe"
 check_and_download "ZeroTier One.msi" "https://download.zerotier.com/dist/ZeroTier%20One.msi?_gl=1*1snqeb8*_up*MQ..*_ga*MTYxNDY0ODg4MC4xNzE1MjM2Njc5*_ga_6TEJNMZS6N*MTcxNTIzNjY3Ni4xLjAuMTcxNTIzNjY3Ni4wLjAuMA..*_ga_NX38HPVY1Z*MTcxNTIzNjY3Ni4xLjAuMTcxNTIzNjY3Ni4wLjAuMA.."
 check_and_download "Cloudflare_WARP_2024.3.409.0.msi" "https://1111-releases.cloudflareclient.com/windows/Cloudflare_WARP_Release-x64.msi"
-check_and_download "552.22-desktop-win10-win11-64bit-international-dch-whql.exe" "https://us.download.nvidia.com/Windows/552.22/552.22-desktop-win10-win11-64bit-international-dch-whql.exe"
+check_and_download "552.44-desktop-win10-win11-64bit-international-dch-whql.exe" "https://us.download.nvidia.com/Windows/552.44/552.44-desktop-win10-win11-64bit-international-dch-whql.exe"
 
 echo "----------------------------------------"
 
@@ -93,11 +93,6 @@ fi
 echo "----------------------------------------"
 
 # Build ISO for scripts
-  local iso_name=$1
-  local iso_dir=$2
-  local iso_source=$3
-  local iso_label=$4
-  local pkvars_file=$5
 create_iso "scripts_cloudbase-init.iso" "/var/lib/vz/template/iso" "$script_dir/scripts" "scripts CD" "$script_dir/scripts.pkvars.hcl"
 
 echo "----------------------------------------"

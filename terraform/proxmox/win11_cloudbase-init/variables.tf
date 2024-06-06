@@ -1,7 +1,7 @@
 # Credentials and configuration for the Proxmox provider
 variable "proxmox_api_url" {
   type = string
-  default = "https://0.0.0.0:8006/api2/json"
+  default = "https://10.11.1.181:8006/api2/json"
 }
 
 variable "proxmox_api_token_id" {
@@ -44,7 +44,7 @@ variable "network_bridge" {
 }
 
 variable "network_model" {
-  default = "e1000"
+  default = "virtio"
 }
 
 variable "vm_template_id" {
@@ -65,7 +65,9 @@ variable "vms_config" {
     cores       = number
     cpu_type    = string
     memory      = number
+    node        = string
     clone       = string
+    disk_size   = number
     dns         = string
     ip          = string
     gateway     = string
@@ -80,7 +82,10 @@ variable "vms_config" {
       cores       = 6
       cpu_type    = "host"
       memory      = 8192
-      clone       = "Win11x64-VM-template-cloudbaseInit-ovmf-autorun-jordan-scripts"
+      node        = "pve"
+      # clone       = "RTX-4070-Ti-SysPrep-On"
+      clone       = "RTX-4070-Ti-SysPrep"
+      disk_size   = 512
       dns         = "192.168.10.1" # Placeholder
       ip          = "192.168.10.10/24" # Placeholder
       gateway     = "192.168.10.1" # Placeholder

@@ -1,8 +1,12 @@
 import os
+import sys
 from flask import Flask, redirect
 from flask_swagger_ui import get_swaggerui_blueprint
 from routes.version1.v1 import v1_route
 import logging
+
+from routes.version1.run_vm_creation import start_request_processing
+# from routes.version1.run_vm_creation_v2 import start_request_processing
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
@@ -32,6 +36,9 @@ except FileNotFoundError:
 @app.route('/')
 def home():
     return f"Welcome to the API! You can specify the version of the API in the URL, like /api/v1 or /api/v2. Currently, the available versions are: {', '.join(versions)}."
+
+# Start the request processing thread
+start_request_processing()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=6969)

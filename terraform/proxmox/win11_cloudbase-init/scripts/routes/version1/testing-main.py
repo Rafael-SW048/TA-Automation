@@ -11,6 +11,7 @@ def test_create_vm():
                 "desc": "VM-CloudGaming-SIDtest",
                 "cpu_type": "host",
                 "memory": 8192,
+                "node": "pve",
                 "clone": "101-No-PCI",
                 "dns": "",
                 "ip": "",

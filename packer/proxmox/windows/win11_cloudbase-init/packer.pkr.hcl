@@ -36,11 +36,12 @@ source "proxmox-iso" "win11-cloudbase-init" {
     sockets = "${var.vm_sockets}"
     os = "${var.os}"
     cpu_type = "host"
-    // machine = "q35"
-    // scsi_controller = "virtio-scsi-single"
+    // machine = "q35" # Does not work with the current version of the Autounattend.xml because its randomizes the disk order
+    scsi_controller = "virtio-scsi-single"
     bios = "ovmf"
 
     boot = "order=sata4;ide2;sata0;net0;sata3;sata5"
+    // boot = "order=sata4;ide2;scsi0;net0;sata3;sata5"
 
     network_adapters {
             model = "e1000"
@@ -50,12 +51,15 @@ source "proxmox-iso" "win11-cloudbase-init" {
 
     # VM Hard Disk Settings
     disks {
-        type = "sata"
+        // type = "scsi"
+        type = "virtio" # Does not support ssd emulator
+        # Both scsi and virtio makes the autounattend.xml fail in the Windowns PE part
+        // type = "sata"
         disk_size = "${var.vm_disk_size}"
         storage_pool = "${var.proxmox_vm_storage}"
         format = "raw"
-        ssd = true
-        // io_thread = true
+        // ssd = true # Only works with scsi and sata
+        io_thread = true # Only works with virtio and scsi
 	    cache_mode="writeback"
     }
 
@@ -99,7 +103,7 @@ source "proxmox-iso" "win11-cloudbase-init" {
     winrm_use_ssl = true
     winrm_no_proxy = true
     winrm_timeout = "12h"
-    task_timeout = "4h"
+    task_timeout = "8h"
 }
 
 build {
@@ -124,13 +128,13 @@ build {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
         pause_before      = "5s"
-        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
+        scripts           = ["${path.root}/../scripts/sysprep/setup-application.ps1"]
     }
 
     provisioner "powershell" {
         elevated_user     = "${var.winrm_username}"
         elevated_password = "${var.winrm_password}"
         pause_before      = "5s"
-        scripts           = ["${path.root}/../scripts/sysprep/setup-application.ps1"]
+        scripts           = ["${path.root}/../scripts/sysprep/cloudbase-init-p2.ps1"]
     }
 }

@@ -9,32 +9,35 @@ terraform {
     proxmox = {
       source  = "bpg/proxmox"
       version = ">= 0.53.1"
+      # version = ">= 0.58.1"
     }
-    null = {
-      source  = "hashicorp/null"
-      version = ">= 3.1.0"
-    }
+    # null = {
+    #   source  = "hashicorp/null"
+    #   version = ">= 3.1.0"
+    # }
   }
 }
 
 provider "proxmox" {
+  endpoint = var.proxmox_api_url
+  username = var.proxmox_api_token_id
+  password = var.proxmox_api_token_password
 
-    endpoint = var.proxmox_api_url
-    username = var.proxmox_api_token_id
-    password = var.proxmox_api_token_password
-
-    # (Optional) Skip TLS Verification
-    insecure = var.proxmox_skip_tls_verify
+  # (Optional) Skip TLS Verification
+  insecure = var.proxmox_skip_tls_verify
 }
 
+
 resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
+
   for_each = var.vms_config
 
-  node_name   = var.proxmox_node
+  node_name   = each.value.node
   pool_id     = var.proxmox_pool
 
   name = each.value.name
   description = each.value.desc
+  bios = "ovmf"
 
   operating_system {
     type = "win11"
@@ -60,10 +63,18 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
   }
 
   clone {
-      node_name = var.proxmox_node
-      vm_id = lookup(var.vm_template_id, each.value.clone, -1)
-      full  = var.vm_full_clone
-      retries = 2
+    node_name = var.proxmox_node
+    vm_id = lookup(var.vm_template_id, each.value.clone, -1)
+    full  = var.vm_full_clone
+    # retries = 1
+  }
+
+  disk {
+    cache = "writeback"
+    interface = "scsi0"
+    iothread = true
+    ssd = true
+    size = each.value.disk_size
   }
 
   agent {
@@ -71,17 +82,19 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
     enabled = true
   }
 
+  # stop_on_destroy = true
+
   network_device {
     bridge  = var.network_bridge
     model   = var.network_model
   }
 
-  audio_device {
-    device = "ich9-intel-hda"
-  }
+  # audio_device {
+  #   device = "ich9-intel-hda"
+  # }
 
   vga {
-    memory = 256
+    memory = 512
     type = "virtio"
   }
 
@@ -90,12 +103,13 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
     # dns {
     #   servers = [each.value.dns]
     # }
-    # ip_config {
-    #   ipv4 {
-    #     address = each.value.ip
-    #     gateway = each.value.gateway
-    #   }
-    # }
+    ip_config {
+      ipv4 {
+        address = "dhcp"
+        # address = each.value.ip
+        # gateway = each.value.gateway
+      }
+    }
   }
 
   provisioner "local-exec" {
@@ -103,9 +117,13 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
     when    = create
   }
 
-  
+  provisioner "local-exec" {
+    command = "rm -f /root/TA-Automation/terraform/proxmox/win11_cloudbase-init/vm_ip-address/*-${self.vm_id}.txt"
+    when    = destroy
+  }
 
 }
+
 
 # resource "null_resource" "remote_exec" {
 #   depends_on = [proxmox_virtual_environment_vm.win11_cloudbase-init]

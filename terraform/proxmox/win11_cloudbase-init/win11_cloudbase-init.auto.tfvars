@@ -1,12 +1,14 @@
 vm_full_clone = false
 
 vm_template_id = {
-  "Win11x64-VM-template-cloudbaseInit-ovmf-autorun-jordan-scripts" = 103,
-  "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep" = 100,
+  "RTX-4070-Ti-sysprep-On" = 201,
+  "RTX-4070-Ti-sysprep-On-ChangeScript" = 202,
+  "GTX-1080-pve2-fixed" = 401,
+  "RTX-4070-Ti-sysprep" = 555
 }
 
-storage = "pve"
+storage = "pve"                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
 
 network_bridge = "vmbr0"
 
-network_model = "e1000"
+network_model = "virtio"
