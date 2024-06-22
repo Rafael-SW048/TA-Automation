@@ -1,12 +1,10 @@
 from flask import Flask, request, jsonify, Blueprint, json
 import logging
-from routes.version1.user_vm_config import validate_and_fill_defaults, update_pci_data, add_vm_config, delete_vm_config, update_tfvars, get_config_path, load_hcl_config, pc_settings
+from routes.version1.user_vm_config import validate_and_fill_defaults, update_pci_data, add_vm_config, delete_vm_config, update_tfvars, get_config_path, load_hcl_config
 from routes.version1.run_vm_creation import handle_request
 # from routes.version1.run_vm_creation_v2 import handle_request
 import subprocess
 import requests
-
-import shutil
 
 vms = Blueprint('vms', __name__, url_prefix='/vms')
 
@@ -26,35 +24,19 @@ def create_vm():
         if not vm_config:
             raise ValueError("Request data is not JSON")
         print("got a request", vm_config)
-        vm_sid = "vm-" + vm_config["SID"]
-        vm_config = {vm_sid: vm_config}
-        print("formated data", vm_config)
-        validated_config = {key: validate_and_fill_defaults(value) for key, value in vm_config.items()}
-        print("validated: ", validated_config)
+        add_vm_config(vm_config)
         
-        pci_updated_config = update_pci_data(validated_config)
-        print("pci updated: ", pci_updated_config)
+        vm_sid = list(vm_config.keys())[0]
         
-        revalidate_config = pc_settings(pci_updated_config)
-        if revalidate_config:
-            print("revalidate: ", revalidate_config)
-            vm_config.update(revalidate_config)
-        else:
-            print("no revalidate")
-        
-        other_node_url = "http://10.11.1.182:6969/v1/vms"  # Replace with the URL of your other node
-        
-        # Brute Force Cluster. Need Improvement
-        if pci_updated_config[vm_sid]["node"] != "pve":
-            # Forward the request to another node
-            response = requests.post(other_node_url, json=vm_config)
-            return response.content, response.status_code
-        else:
-            add_vm_config(pci_updated_config)
-            handle_request(vm_sid)
-            return create_response('VM configuration on PVE1 added successfully. Creating VM in PVE1', 200), 200
-        
-        # handle_request({"action": "create", "sid": sid})
+        if vm_config[vm_sid]['node'] != "pve":
+            handle_request(vm_config)
+            return create_response('VM configuration on PVE2 added successfully. Creating VM in PVE2', 200), 200
+
+        # # Handle the request
+        # # handle_request(vm_config)
+        # for key, value in vm_config.items():
+        #     sid_value = value["SID"]
+        #     handle_request({"action": "create", "sid": sid_value})
 
     except KeyError as e:
         logging.error("Missing key in VM configuration", exc_info=True)
@@ -69,20 +51,13 @@ def create_vm():
 @vms.route('/<vm_sid>', methods=['DELETE'])
 def delete_vm(vm_sid):
     try:
-        # Brute Force Cluster. Need Improvement
         hcl_config = load_hcl_config(get_config_path())
-        other_node_url = "http://10.11.1.182:6969/v1/vms"  # Replace with the URL of your other node
-        
+        delete_vm_config(vm_sid)
         if hcl_config["vm-" + vm_sid]["node"] != 'pve':
-            response = requests.delete(f"{other_node_url}/{vm_sid}")
-            return response.content, response.status_code
-        else:
-            delete_vm_config(vm_sid)
             handle_request({"action": "delete", "sid": vm_sid})
-            return create_response('VM configuration on PVE1 deleted successfully. Deleting VM in PVE1', 200), 200
-
+            return create_response('VM configuration on PVE2 deleted successfully. Deleting VM in PVE2', 200), 200
     except KeyError as e:
-        logging.error(f"No VM with SID found. SID: {vm_sid}", exc_info=True)
+        logging.error("No VM with SID found", exc_info=True)
         return create_response(f"No VM with SID {vm_sid} found", 404, status='error'), 404
     except Exception as e:
         logging.error("Internal server error during deletion", exc_info=True)

@@ -17,13 +17,13 @@
       </OOBE>
       <UserAccounts>
           <AdministratorPassword>
-              <Value>181</Value>
+              <Value>admin</Value>
               <PlainText>true</PlainText>
           </AdministratorPassword>
           <LocalAccounts>
               <LocalAccount wcm:action="add">
                   <Password>
-                      <Value>181</Value>
+                      <Value>admin</Value>
                       <PlainText>true</PlainText>
                   </Password>
                   <Group>administrators</Group>

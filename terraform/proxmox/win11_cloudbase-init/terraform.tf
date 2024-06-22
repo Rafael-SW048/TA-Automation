@@ -59,6 +59,9 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
     content {
       device = "hostpci0"
       id     = each.value.pci_device
+      pcie   = true
+      xvga   = true
+      rombar = true
     }
   }
 
@@ -82,7 +85,7 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
     enabled = true
   }
 
-  # stop_on_destroy = true
+  stop_on_destroy = true
 
   network_device {
     bridge  = var.network_bridge
@@ -113,7 +116,7 @@ resource "proxmox_virtual_environment_vm" "win11_cloudbase-init" {
   }
 
   provisioner "local-exec" {
-    command = "./scripts/vm_ip-address_checker.sh ${self.vm_id} ${each.value.SID}"
+    command = "./scripts/vm_ip-address_checker.sh ${self.vm_id} ${each.value.SID} ${each.value.name}"
     when    = create
   }
 

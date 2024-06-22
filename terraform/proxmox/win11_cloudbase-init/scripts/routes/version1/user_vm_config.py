@@ -3,66 +3,72 @@ import os
 from routes.version1.validate_vga import assign_pci_to_vm  # Import the assign_pci_to_vm function from VGA.py
 from routes.version1.helpers import runRemote
 
-def getNodesName():
-    command = "pvesh get /nodes --output-format json-pretty | jq -r '.[].node'"
-    node_names_output = runRemote(command)
-    node_names = node_names_output.split('\n')
-    node_names = [name for name in node_names if name]  # remove empty strings
-    node_names = node_names[1:]
-    return node_names
-  
-import json
-
-def getNodesMemory(node_name):
-    command = f"pvesh get /nodes/{node_name}/status --output-format json-pretty | jq -r '.memory'"
-    memory_output = runRemote(command)
-    memory_output = memory_output.split('{', 1)[-1]  # ignore any lines before the JSON data
-    memory_output = '{' + memory_output  # add the opening brace back to the start of the JSON data
-    memory_data = json.loads(memory_output)
-    return memory_data
-  
-def getNodesLoad():
-    nodes_name = getNodesName()
-    nodes_load = {}
-    print(nodes_name)
-    for node_name in nodes_name:
-        nodes_load[node_name] = getNodesMemory(node_name)
-    print(nodes_load)
-    return nodes_load
-
 def update_pci_data(json_data):
     nodes = {'pve': '10.11.1.181', 'pve2': '10.11.1.182'}  # Unique keys for nodes
-    nodesLoad = getNodesLoad()  # Retrieve node load information once outside the loop
-    sortedNodeLoad = sorted(nodesLoad, key=lambda k: nodesLoad[k]['free'])  # Sort once
-    
+    nodesName = list(nodes.keys())
+
     for vm_sid, vm_info in json_data.items():
         pci_device = vm_info.get('pci_device')
         if pci_device:
+            print(f"PCI device specified for {vm_sid}")
             try:
+                print(f"Getting PCI device for {vm_sid}")
                 pci_data = assign_pci_to_vm(pci_device)  # Retrieve PCI data for each VM
-                nodeIps = pci_data.keys()
+                nodeIps = list(pci_data.keys())
                 updated = False
                 for nodeIp in nodeIps:
                     if pci_data[nodeIp]['available']:
-                        for nodeName in sortedNodeLoad:
+                        print(f"Available PCI devices for {vm_sid}: {pci_data[nodeIp]['available']}")
+                        for nodeName in nodesName:
                             print(nodes, nodeName, nodeIps, nodeIp)
+                            print("Status: ", nodes[nodeName] in nodeIps)
                             if nodes[nodeName] in nodeIps:
+                                print(f"Node {nodeName} has available PCI devices")
                                 vm_info['pci_device'] = pci_data[nodeIp]['available'][0]
                                 vm_info['node'] = nodeName
                                 updated = True
                                 break
                         if updated:
                             break  # Break out of both loops if updated
-                else:
-                    print("here7")
-                    vm_info['pci_device'] = ""
-                    vm_info['node'] = "pve"
-                        
+                    else:
+                        print(f"No available PCI devices for {vm_sid} on {nodeIp}")
+                        vm_info["clone"] = "RTX-4070-Ti-sysprep-updated"
+                        vm_info['pci_device'] = ""
+                        vm_info['node'] = "pve"
+                
             except ValueError as e:
                 print(f"Error while assigning PCI device for {vm_sid}: {e}")
                 # Handle the error gracefully, e.g., by logging or taking alternative actions
+                            
+        else:
+            print(f"No PCI device specified for {vm_sid}")
+            if vm_info['clone'] == "GTX-1080":
+                vm_info['pci_device'] = ""
+                vm_info['node'] = "pve"
+            else:
+                vm_info['pci_device'] = ""
+                vm_info['node'] = "pve"
+                        
                 
     return json_data
+
+def pc_settings(vm_config):
+    pci_device_settings = {
+        "GeForce RTX 4070 Ti": {"disk_size": 512, "clone": "RTX-4070-Ti-sysprep-updated", "node": "pve", "cores": 6},
+        "GeForce GTX 1080": {"disk_size": 200, "clone": "GTX-1080-updated", "node": "pve2", "cores": 4}
+    }
+    
+    clone_settings = {
+        "RTX-4070-Ti-sysprep-updated": {"disk_size": 512, "node": "pve", "pci_device": "", "cores": 6},
+        "GTX-1080-updated": {"disk_size": 200, "node": "pve2", "pci_device": "", "cores": 4}
+    }
+    
+    if 'pci_device' in vm_config and vm_config['pci_device'] in pci_device_settings:
+        return pci_device_settings[vm_config['pci_device']]
+    elif 'clone' in vm_config and vm_config['clone'] in clone_settings:
+        return clone_settings[vm_config['clone']]
+    else:
+        return None  # No specific settings found
 
 def validate_and_fill_defaults(vm_config):
     required_keys = ["name", "desc", "SID"]
@@ -71,22 +77,26 @@ def validate_and_fill_defaults(vm_config):
         "cpu_type": "host",
         "memory": 8192,
         "node": "pve",
-        # "clone": "RTX-4070-Ti-sysprep-On-ChangeScript",
-        "clone": "RTX-4070-Ti-sysprep-On",
-        # "clone": "RTX-4070-Ti-sysprep",
-        "disk_size": 200,
+        "clone": "RTX-4070-Ti-sysprep-updated",
+        "disk_size": 512,
         "dns": "",
         "ip": "",
         "gateway": "",
         "pci_device": "GeForce RTX 4070 Ti"
     }
-
+    
+    # Get specific settings based on pci_device or clone
+    specific_settings = pc_settings(vm_config)
+    if specific_settings:
+        vm_config.update(specific_settings)
+    else:
+        vm_config.update(optional_keys_with_defaults)
+    
+    # Validate required keys and set default values
     for key in required_keys:
         if key not in vm_config:
             raise ValueError(f'Missing key: {key}')
-        if not isinstance(vm_config[key], str):
-            raise ValueError(f'Invalid type for key: {key}, expected string')
-
+    
     for key, default_value in optional_keys_with_defaults.items():
         if key not in vm_config:
             vm_config[key] = default_value
@@ -94,22 +104,6 @@ def validate_and_fill_defaults(vm_config):
             raise ValueError(f'Invalid type for key: {key}, expected integer')
         elif key in ["cpu_type", "clone", "dns", "ip", "gateway", "pci_device"] and not isinstance(vm_config[key], str):
             raise ValueError(f'Invalid type for key: {key}, expected string')
-    
-    # Set specific values for 'clone' and 'node' based on 'pci_device'
-    if 'pci_device' in vm_config:
-        if vm_config['pci_device'] == 'GeForce RTX 4070 Ti':
-            # vm_config['clone'] = "RTX-4070-Ti-sysprep-On-ChangeScript"
-            vm_config['clone'] = 'RTX-4070-Ti-sysprep-On'
-            vm_config['disk_size'] = 512
-            # vm_config['clone'] = 'RTX-4070-Ti-sysprep'
-            vm_config['node'] = 'pve'
-        elif vm_config['pci_device'] == 'GeForce GTX 1080':
-            vm_config['clone'] = 'GTX-1080-pve2-fixed' # Need to update this value
-            vm_config['disk_size'] = 200
-            vm_config['node'] = 'pve2'
-    else:
-        vm_config['node'] = 'pve'
-
 
     return vm_config
 
@@ -144,7 +138,6 @@ def add_vm_config(vm_config):
     if vm_id in data['vms_config']:
         raise ValueError(f"VM configuration for {vm_id} already exists")
     
-    update_pci_data(vm_config)
     data['vms_config'].update(vm_config)
     save_hcl_config(data, config_path)
   except Exception as e:

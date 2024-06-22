@@ -12,7 +12,6 @@ variable "proxmox_api_token_id" {
 variable "proxmox_api_token_password" {
   type = string
   sensitive = true
-  # default = "admin"
 }
 
 variable "proxmox_skip_tls_verify" {
@@ -52,8 +51,8 @@ variable "vm_template_id" {
 
   # set the ids according to your templates
   default = {
-    Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep-ovmf = 104,
-    Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep = 100
+    RTX-4070-Ti-sysprep-updated = 201,
+    GTX-1080-sysprep = 202
   }
 }
 
@@ -83,8 +82,8 @@ variable "vms_config" {
       cpu_type    = "host"
       memory      = 8192
       node        = "pve"
-      # clone       = "RTX-4070-Ti-SysPrep-On"
-      clone       = "RTX-4070-Ti-SysPrep"
+      clone       = "RTX-4070-Ti-SysPrep-updated"
+      # clone       = "RTX-4070-Ti-SysPrep"
       disk_size   = 512
       dns         = "192.168.10.1" # Placeholder
       ip          = "192.168.10.10/24" # Placeholder
