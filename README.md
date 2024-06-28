@@ -17,5 +17,5 @@ After installing Proxmox, it is important to correct the Proxmox repositories. Y
 Finally, execute the `PVE_initial_setup.sh` script to perform the initial setup of your Proxmox server.
 
 For more information, refer to the following documentation:
-- [Terraform](terraform/README.md)
-- [Packer](packer/README.md)
+- [Terraform](terraform/proxmox/README.md)
+- [Packer](packer/proxmox/README.md)
