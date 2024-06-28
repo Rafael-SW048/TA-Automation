@@ -1,5 +1,10 @@
+from flask import jsonify
 import paramiko
 import logging
+import subprocess
+import requests
+
+logger = logging.getLogger(__name__)
 
 def runRemote(command, hostname="10.11.1.181", username="root", password="", runOnAllNodes=False):
   """
@@ -45,3 +50,26 @@ def runRemote(command, hostname="10.11.1.181", username="root", password="", run
   except Exception as e:
     logging.error("Error during remote command execution to " + hostname + ": " + str(e), exc_info=True)
     return "Error during remote command execution to " + hostname + ": " + str(e)
+
+def create_response(message, code, status='success', details=""):
+    response = {status: {"code": code, "message": message}}
+    if details:
+        response["details"] = details
+    return jsonify(response)
+
+def handle_subprocess(command):
+    try:
+        output = subprocess.check_output(command, shell=True)
+        return output.decode('utf-8')
+    except subprocess.CalledProcessError as e:
+        logger.error("Subprocess error: %s", e, exc_info=True)
+        raise
+
+def check_node_availability(node):
+    try:
+        response = requests.get(f"{node['url']}/health")
+        if response.status_code == 200:
+            return True
+    except requests.exceptions.RequestException as e:
+        logger.error("Node check request error: %s", e, exc_info=True)
+    return False

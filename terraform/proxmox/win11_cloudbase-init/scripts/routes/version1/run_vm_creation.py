@@ -1,96 +1,115 @@
 import subprocess
-import signal
 import sys
-import os
 import threading
 import time
 import queue
+import signal
+import logging
+import os
 
-# Define constants
-LOCK_FILE = "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init/terraform.lock"
-RETRY_INTERVAL = 5  # seconds
-TIMEOUT = 300  # seconds (5 minutes)
+# Configure a dedicated logger for this module
+logger = logging.getLogger('run_vm_creation')
+logger.setLevel(logging.INFO)
+
+# Create file handler for logging to a separate file
+file_handler = logging.FileHandler('run_vm_creation.log')
+file_handler.setLevel(logging.INFO)
+
+# Create a logging format
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+file_handler.setFormatter(formatter)
+
+# Add the file handler to the logger
+logger.addHandler(file_handler)
+
+# Ensure the logger does not propagate to the root logger
+logger.propagate = False
 
 # Define synchronization objects
 LOCK = threading.Lock()
 REQUEST_QUEUE = queue.Queue()
+STOP_EVENT = threading.Event()
 
 def run_command(command, directory):
+    logger.info(f"Running command: {command}")
     process = subprocess.Popen(command, stdout=subprocess.PIPE, text=True, cwd=directory)
     try:
         while True:
             output = process.stdout.readline()
-            print(output.strip())
-            # Break the loop if there is no more output and the process has finished
+            if output:
+                logger.info(output.strip())
             if output == '' and process.poll() is not None:
                 break
     except KeyboardInterrupt:
-        print("Script subprocess interrupted. Exiting....")
+        logger.warning("Script subprocess interrupted. Exiting....")
         process.send_signal(signal.SIGINT)
-        # Continue reading the subprocess's output until it has finished
         while process.poll() is None:
             output = process.stdout.readline()
-            print(output.strip())
+            if output:
+                logger.info(output.strip())
     if process.poll() != 0:
-        print("Error during command execution. Exiting subprocess.")
+        logger.error("Error during command execution. Exiting subprocess.")
         sys.exit(1)
 
 def process_requests():
-    while True:
-        # Wait for the lock to be released
-        wait_for_lock()
-        
-        # Try to acquire the lock
-        if LOCK.acquire(blocking=False):
-            try:
-                # Process the next request in the queue
+    logger.info("Processing requests")
+    try:
+        count_idle = 0
+        sleep_time = 3
+        while not STOP_EVENT.is_set():
+            logger.info(f"Checking lock. Sleep time: {sleep_time}. Count idle: {count_idle}")
+            with LOCK:
+                logger.info("Lock acquired, checking request queue")
                 if not REQUEST_QUEUE.empty():
+                    count_idle = 0
+                    sleep_time = 3
                     request = REQUEST_QUEUE.get()
                     update_terraform_state(request)
-            finally:
-                # Release the lock
-                LOCK.release()
-        else:
-            # If the lock is not available, wait and try again
-            time.sleep(1)
-
-def wait_for_lock():
-    start_time = time.time()
-    while os.path.exists(LOCK_FILE):
-        elapsed_time = time.time() - start_time
-        if elapsed_time > TIMEOUT:
-            print("Timeout while waiting for the lock file to be released. Exiting.")
-            return False
-        print(f"Lock file exists. Waiting for {RETRY_INTERVAL} seconds...")
-        time.sleep(RETRY_INTERVAL)
-    return True
+                else:
+                    logger.info("Request queue is empty")
+                    if count_idle < 5:
+                        count_idle += 1
+                    elif 10 <= count_idle < 20:
+                        count_idle += 1
+                        sleep_time = 15
+                    elif 20 <= count_idle < 50:
+                        count_idle += 1
+                        sleep_time = 30
+                    elif 50 <= count_idle:
+                        sleep_time = 60
+                        
+            time.sleep(sleep_time)
+    except KeyboardInterrupt:
+        logger.warning("Script interrupted. Exiting.")
 
 def update_terraform_state(request):
+    logger.info(f"Updating Terraform state for request: {request}")
     try:
-        # Create the lock file
-        with open(LOCK_FILE, 'w') as lock_file:
-            print("Creating lock file...")
-            lock_file.write(f"Locked by process {os.getpid()} at {time.ctime()}\n")
-
-        # Run the Terraform commands
         run_command(["terraform", "init"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
         run_command(["terraform", "validate"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
         run_command(["terraform", "plan", "-out=tf.plan", "--var-file=/root/TA-Automation/terraform/proxmox/credentials.tfvars"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
         run_command(["terraform", "apply", "-auto-approve", "tf.plan"], "/root/TA-Automation/terraform/proxmox/win11_cloudbase-init")
+        logger.info("Terraform state updated successfully")
+        logger.info("\n--------------------------------------------------------\n")
 
-        # os.remove("tf.plan")
+        os.remove("tf.plan")
     except KeyboardInterrupt:
-        print("Script interrupted. Exiting.")
-    finally:
-        # Remove the lock file
-        if os.path.exists(LOCK_FILE):
-            os.remove(LOCK_FILE)
+        logger.warning("Script interrupted. Exiting.")
+        logger.info("\n--------------------------------------------------------\n")
+    except Exception as e:
+        logger.error(f"Error updating Terraform state: {e}")
+        logger.info("\n--------------------------------------------------------\n")
 
 def handle_request(request):
-    # Add the request to the queue
+    logger.info(f"Handling request: {request}")
     REQUEST_QUEUE.put(request)
 
 def start_request_processing():
-    # Start a separate thread to process requests
+    logger.info("Starting request processing")
     processing_thread = threading.Thread(target=process_requests)
     processing_thread.start()
+    return processing_thread
+
+def stop_request_processing():
+    logger.info("Stopping request processing")
+    STOP_EVENT.set()

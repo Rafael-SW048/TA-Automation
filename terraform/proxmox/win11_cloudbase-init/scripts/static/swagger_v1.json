@@ -32,7 +32,7 @@
               "properties": {
                 "message": {
                   "type": "string",
-                  "example": "VM configuration added successfully"
+                  "example": "VM configuration added successfully. Creating VM in pve."
                 }
               }
             }
@@ -40,13 +40,73 @@
           "400": {
             "description": "Invalid configuration or missing required fields",
             "schema": {
-              "$ref": "#/definitions/ErrorModel"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 400
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Invalid data or operation"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Request data is not JSON"
+                }
+              }
+            }
+          },
+          "502": {
+            "description": "Request error",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 502
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Request error"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Node check request error"
+                }
+              }
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal server error",
             "schema": {
-              "$ref": "#/definitions/ErrorModel"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error during VM creation process"
+                }
+              }
             }
           }
         }
@@ -73,7 +133,7 @@
               "properties": {
                 "message": {
                   "type": "string",
-                  "example": "VM configuration deleted successfully"
+                  "example": "VM configuration deleted successfully. Deleting VM in pve."
                 }
               }
             }
@@ -81,13 +141,49 @@
           "404": {
             "description": "No VM with SID found",
             "schema": {
-              "$ref": "#/definitions/ErrorModel"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "No VM with SID found"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Ensure the SID is correct and exists."
+                }
+              }
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal server error during deletion",
             "schema": {
-              "$ref": "#/definitions/ErrorModel"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error during deletion"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error during VM deletion process"
+                }
+              }
             }
           }
         }
@@ -108,9 +204,132 @@
             }
           },
           "500": {
-            "description": "Server error",
+            "description": "Internal server error during template retrieval",
             "schema": {
-              "$ref": "#/definitions/ErrorModel"
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error during template retrieval"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error occurred while retrieving VM templates"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/checkSID/{ip}": {
+      "get": {
+        "summary": "Check SID for IP",
+        "description": "Retrieves the SID and username for a given IP address.",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ip",
+            "required": true,
+            "description": "The IP address to check",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "SID found for the given IP address",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "ip": {
+                  "type": "string",
+                  "example": "10.0.0.1"
+                },
+                "SID": {
+                  "type": "string",
+                  "example": "vm-1234"
+                },
+                "username": {
+                  "type": "string",
+                  "example": "user1"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No SID found for the given IP address",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 404
+                },
+                "message": {
+                  "type": "string",
+                  "example": "No SID found for the given IP address"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Ensure the IP address is correct and try again."
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error while checking SID",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "error"
+                },
+                "code": {
+                  "type": "integer",
+                  "example": 500
+                },
+                "message": {
+                  "type": "string",
+                  "example": "Internal server error while checking SID"
+                },
+                "details": {
+                  "type": "string",
+                  "example": "Error occurred while checking SID for the given IP address"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "summary": "Health Check",
+        "description": "Checks the health of the API service.",
+        "responses": {
+          "200": {
+            "description": "Service is healthy",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "example": "healthy"
+                }
+              }
             }
           }
         }
@@ -128,15 +347,18 @@
       "properties": {
         "name": {
           "type": "string",
-          "description": "Name of the VM"
+          "description": "Name of the VM",
+          "example": "RTX-4070-Ti-vm1"
         },
         "desc": {
           "type": "string",
-          "description": "Description of the VM"
+          "description": "Description of the VM",
+          "example": "Windows 11 VM with NVIDIA RTX 4070 Ti GPU"
         },
         "SID": {
           "type": "string",
-          "description": "System ID of the VM"
+          "description": "System ID of the VM",
+          "example": "vm-0190169f-4688-7e12-bd14-90873638058c"
         },
         "cores": {
           "type": "integer",
@@ -148,10 +370,10 @@
           "description": "Amount of memory in MB",
           "default": 8192
         },
-        "disk": {
+        "disk_size": {
           "type": "integer",
           "description": "Size of disk in GB",
-          "default": 100
+          "default": 512
         },
         "cpu_type": {
           "type": "string",
@@ -161,19 +383,22 @@
         "clone": {
           "type": "string",
           "description": "Name of a VM to clone configuration from",
-          "default": "Win11x64-VM-template-cloudbaseInit-raw-NoSysPrep"
+          "default": "RTX-4070-Ti-sysprep-updated"
         },
         "dns": {
           "type": "string",
-          "description": "DNS server address for the VM"
+          "description": "DNS server address for the VM",
+          "example": "1.1.1.1"
         },
         "ip": {
           "type": "string",
-          "description": "Static IP address for the VM"
+          "description": "Static IP address for the VM",
+          "example": "10.11.1.105"
         },
         "gateway": {
           "type": "string",
-          "description": "Default gateway for the VM"
+          "description": "Default gateway for the VM",
+          "example": "10.0.0.1"
         },
         "pci_device": {
           "type": "string",
@@ -181,13 +406,25 @@
           "default": "GeForce RTX 4070 Ti"
         }
       }
-    },    
+    },
     "ErrorModel": {
       "type": "object",
       "properties": {
-        "error": {
+        "status": {
+          "type": "string",
+          "example": "error"
+        },
+        "code": {
+          "type": "integer",
+          "example": 400
+        },
+        "message": {
           "type": "string",
           "example": "Invalid configuration or missing required fields"
+        },
+        "details": {
+          "type": "string",
+          "example": "Ensure all required keys are provided."
         }
       }
     }

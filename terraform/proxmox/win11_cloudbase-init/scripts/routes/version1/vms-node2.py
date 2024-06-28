@@ -32,12 +32,6 @@ def create_vm():
             handle_request(vm_config)
             return create_response('VM configuration on PVE2 added successfully. Creating VM in PVE2', 200), 200
 
-        # # Handle the request
-        # # handle_request(vm_config)
-        # for key, value in vm_config.items():
-        #     sid_value = value["SID"]
-        #     handle_request({"action": "create", "sid": sid_value})
-
     except KeyError as e:
         logging.error("Missing key in VM configuration", exc_info=True)
         return create_response(f"Missing key in VM configuration: {str(e)}", 400, status='error', details="Ensure all required keys are provided."), 400
