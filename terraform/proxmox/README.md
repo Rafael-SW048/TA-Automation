@@ -54,4 +54,4 @@ Before running the code, ensure you have the following installed on your system:
 
 README.md:
 - [Main README](../../README.md)
-- [Packer](../../packer/README.md)
+- [Packer](../../packer/proxmox/README.md)
