@@ -52,10 +52,15 @@ Before running the code, ensure you have the following installed on your system:
      packer build --var-file=./win11_cloudbase-init.pkvars.hcl --var-file=../scripts.pkvars.hcl --var-file=../../credentials.pkr.hcl .
      ```
 
-> ## Potential improvements/changes:
+## Potential improvements/changes:
 
-> - Edit the `Autounattend.xml` file to support more configurations, especially for better customization of the VM virtual hardware using virtio drivers.
+- Edit the `Autounattend.xml` file to support more configurations, especially for better customization of the VM virtual hardware using virtio drivers.
 
-> ## Current limitations:
+## Current limitations:
 
-> `Autounattend.xml` is not yet fully developed to support all configurations. It can only create a VM with default and disk and NIC and not using the virtio drivers at all because we need to install the driver manually for both of those virtual hardisk.
+`Autounattend.xml` is not yet fully developed to support all configurations. It can only create a VM with default and disk and NIC and not using the virtio drivers at all because we need to install the driver manually for both of those virtual hardisk.
+
+
+README.md:
+- [Main README](../../README.md)
+- [Terraform](../../terraform/proxmox/README.md)

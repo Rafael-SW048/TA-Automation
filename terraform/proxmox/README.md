@@ -51,3 +51,7 @@ Before running the code, ensure you have the following installed on your system:
   ```
   http://<your-server-ip>:6969/v1
   ```
+
+README.md:
+- [Main README](../../README.md)
+- [Packer](../../packer/README.md)
