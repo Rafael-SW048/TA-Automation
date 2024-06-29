@@ -6,9 +6,9 @@ This API allows for managing virtual machines (VMs) including creation, deletion
 # Prerequisites
 Before running the code, ensure you have the following installed on your system:
 
-- Python 3.11 or higher[https://www.python.org/downloads/]
-- Terraform[https://www.terraform.io/downloads.html]
-- Proxmox VE (Virtual Environment) version 8.1 or higher[https://www.proxmox.com/proxmox-ve]
+- [Python](https://www.python.org/downloads/) 3.11 or higher
+- [Terraform](https://www.terraform.io/downloads.html)
+- [Proxmox VE (Virtual Environment)](https://www.proxmox.com/proxmox-ve) version 8.1 or higher
 
 # Setup Instructions for Terraform
 ### 1. Clone the Repository

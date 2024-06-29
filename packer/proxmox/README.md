@@ -10,10 +10,10 @@ The API is not yet fully developed, but the packer template is ready to use. How
 
 Before running the code, ensure you have the following installed on your system:
 
-1. Packer[https://www.packer.io/downloads]
-2. Proxmox VE (Virtual Environment) version 8.1 or higher[https://www.proxmox.com/proxmox-ve]
-3. Windows 11 ISO[https://www.microsoft.com/en-us/software-download/windows11]
-4. VirtIO drivers ISO[https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso]
+1. [Packer](https://www.packer.io/downloads)
+2. [Proxmox VE (Virtual Environment)](https://www.proxmox.com/proxmox-ve) version 8.1 or higher
+3. [Windows 11 ISO](https://www.microsoft.com/en-us/software-download/windows11)
+4. [VirtIO drivers ISO](https://fedorapeople.org/groups/virt/virtio-win/direct-downloads/stable-virtio/virtio-win.iso)
 
 # Setup Instructions for Packer
 
